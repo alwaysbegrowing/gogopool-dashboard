@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Layout, Button } from "antd";
 
 const { Footer } = Layout;
 
@@ -15,7 +15,9 @@ export default function CustomFooter() {
         width: "100%",
       }}
     >
-      <span>GoGoPool ©{new Date().getFullYear()}</span>
+      <span>
+        Hosted on <a href="https://dappling.network">dAppling</a>
+      </span>
     </Footer>
   );
 }

@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Col, Row, Statistic, Card } from "antd";
+import { Button, Col, Row, Statistic, Card, Space } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { useContractReads } from "wagmi";
 import {useIsMounted} from '../hooks/mounted'
+import NodesTable from '../components/NodesTable'
 const { ethers } = require("ethers");
 
 import minipoolManagerABI from "../abis/minipoolmanager.json";
@@ -42,6 +43,7 @@ export default function Home() {
   if (!isMounted) return null
 
   return (
+    <Space direction="vertical" size='large'>
     <Row gutter={24}>
       <Col span={12}>
         <Card loading={isLoading} bordered={false}>
@@ -63,5 +65,7 @@ export default function Home() {
         </Card>
       </Col>
     </Row>
+   <NodesTable isLoading={isLoadingMinipools} data={minipoolData[0]}/>
+    </Space>
   );
 }
