@@ -43,9 +43,7 @@ export const Description = () => {
         name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
       />
-      <title itemProp="name">
-        Rooted in Nature, Growing with You | GoGoPool
-      </title>
+      <title itemProp="name">GoGoPool Dashboard </title>
       <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
       <meta
         name="description"
@@ -96,10 +94,7 @@ export const Description = () => {
 
       <meta name="target" content="all" />
 
-      <meta
-        name="og:title"
-        content="GoGoPool - Rooted in Nature, Growing with You"
-      />
+      <meta name="og:title" content="GoGoPool Dashboard" />
       <meta name="og:type" content="website" />
       <meta name="og:url" content="https://GoGoPool.network" />
       <meta name="og:image" content="/images/tree-with-text.jpg" />
@@ -125,11 +120,7 @@ export const Description = () => {
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@GoGoPool" />
       <meta name="twitter:creator" content="@GoGoPool" />
-      <meta name="twitter:url" content="https://GoGoPool.network" />
-      <meta
-        name="twitter:title"
-        content="Rooted in Nature, Growing with You | GoGoPool"
-      />
+      <meta name="twitter:title" content="GoGoPool Dashboard" />
       <meta
         name="twitter:description"
         content="GoGoPool - Deploy apps seamlessly to decentralized infrastructure. Experience the power of decentralized technology with ease."
