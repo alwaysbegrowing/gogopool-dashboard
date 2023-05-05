@@ -22,10 +22,7 @@ export default function CustomLayout({
   const screens = useBreakpoint();
 
   return (
-    <Layout
-      style={{ minHeight: "100vh", backgroundColor: "#F7F9FF" }}
-      className="blur"
-    >
+    <Layout style={{ minHeight: "100vh", backgroundColor: "#F7F9FF" }}>
       <Header
         style={{
           textAlign: "right",
@@ -62,7 +59,7 @@ export default function CustomLayout({
           ...contentStyle,
         }}
       >
-        <div>{children}</div>
+        {children}
         <CustomFooter />
       </Content>
     </Layout>

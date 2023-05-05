@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Col, Row, Statistic, Card } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { useContractReads } from "wagmi";
+import {useIsMounted} from '../hooks/mounted'
 const { ethers } = require("ethers");
 
 import minipoolManagerABI from "../abis/minipoolmanager.json";
@@ -12,6 +13,8 @@ const minipoolmanagerContract = {
   abi: minipoolManagerABI,
 };
 export default function Home() {
+  const isMounted = useIsMounted()
+
   const { data, isError, isLoading } = useContractReads({
     contracts: [
       {
@@ -24,10 +27,21 @@ export default function Home() {
       },
     ],
   });
-  console.log({ data });
+
+  const { data: minipoolData, isLoading: isLoadingMinipools } = useContractReads({
+    contracts: [
+      {
+        ...minipoolmanagerContract,
+        functionName: "getMinipools",
+        args: [2, 0, 100]
+      },
+    ],
+  });
+  console.log({minipoolData})
+  
+  if (!isMounted) return null
 
   return (
-    <>
     <Row gutter={24}>
       <Col span={12}>
         <Card loading={isLoading} bordered={false}>
@@ -40,7 +54,7 @@ export default function Home() {
         </Card>
       </Col>
       <Col span={12}>
-        <Card loading={isLoading} bordered={false}>
+        <Card loading={false} bordered={false}>
           <Statistic
             title="AVAX Staked by Liquid Stakers"
             value={data?.[1].div(weiValue).toNumber()}
@@ -49,6 +63,5 @@ export default function Home() {
         </Card>
       </Col>
     </Row>
-    </>
   );
 }
