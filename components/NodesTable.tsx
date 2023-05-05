@@ -1,6 +1,7 @@
 import React from "react";
-import { Tag, Table, Button } from "antd";
+import { Card, Table, Button, Typography } from "antd";
 const { ethers } = require("ethers");
+const { Title } = Typography;
 
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
@@ -10,7 +11,9 @@ const App: React.FC = ({ data, isLoading }: any) => {
   const reversedData = data.toReversed();
   console.log(data);
   return (
+    // <Card title="Minipools">
     <Table
+      title={() => <div>Minipools</div>}
       scroll={{ x: true }}
       bordered={false}
       loading={isLoading}
@@ -52,12 +55,15 @@ const App: React.FC = ({ data, isLoading }: any) => {
         key="3"
         render={(n) => {
           const date = new Date(n.toNumber() * 1000);
-          const timeAgo = formatDistance(date, new Date(), { addSuffix: true });
+          const timeAgo = formatDistance(date, new Date(), {
+            addSuffix: true,
+          });
 
           return timeAgo;
         }}
       />
     </Table>
+    // </Card>
   );
 };
 
