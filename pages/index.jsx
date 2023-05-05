@@ -38,26 +38,27 @@ export default function Home() {
       },
     ],
   });
-  console.log({minipoolData})
   
   if (!isMounted) return null
 
   return (
     <Space direction="vertical" size='large'>
-    <Row gutter={24}>
-      <Col span={12}>
+    <Row gutter={[24, 24]}>
+      <Col xs={24} lg={12}>
         <Card loading={isLoading} bordered={false}>
           <Statistic
             title="Active Minipools"
             valueStyle={{ color: "#3f8600" }}
-            prefix={<ArrowUpOutlined />}
             value={data?.[0].toNumber()}
           />
         </Card>
       </Col>
-      <Col span={12}>
+      <Col xs={24} lg={12}>
         <Card loading={false} bordered={false}>
           <Statistic
+                      valueStyle={{ color: "#3f8600" }}
+                      prefix={<ArrowUpOutlined />}
+
             title="AVAX Staked by Liquid Stakers"
             value={data?.[1].div(weiValue).toNumber()}
             precision={0}

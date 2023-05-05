@@ -11,6 +11,7 @@ const App: React.FC = ({ data, isLoading }: any) => {
   console.log(data);
   return (
     <Table
+      scroll={{ x: true }}
       bordered={false}
       loading={isLoading}
       dataSource={reversedData}
