@@ -47,24 +47,27 @@ export const Description = () => {
       <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
       <meta
         name="description"
-        content="GoGoPool - Deploy apps seamlessly to decentralized infrastructure. Experience the power of decentralized technology with ease."
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
       <meta
         name="keywords"
-        content="GoGoPool, Decentralized, Web3, Deployment, Infrastructure, Technology"
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
 
-      <meta name="subject" content="Decentralized App Deployment" />
-      <meta name="pagename" content="GoGoPool - Decentralized App Deployment" />
+      <meta name="subject" content="GoGoPool Dashboard" />
+      <meta
+        name="pagename"
+        content="GoGoPool Metrics Dashboard created by dappling.network"
+      />
       <meta name="copyright" content="GoGoPool" />
       <meta
         name="abstract"
-        content="GoGoPool offers an easy way to deploy apps to decentralized infrastructure, empowering users to leverage the benefits of decentralized technology."
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
-      <meta name="topic" content="Decentralized Technology" />
+      <meta name="topic" content="Metric Dashboard" />
       <meta
         name="summary"
-        content="GoGoPool enables seamless deployment of apps to decentralized infrastructure, revolutionizing the way you experience decentralized technology."
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
 
       <meta name="renderer" content="webkit" />
@@ -101,7 +104,7 @@ export const Description = () => {
       <meta name="og:site_name" content="GoGoPool" />
       <meta
         name="og:description"
-        content="GoGoPool - Deploy apps seamlessly to decentralized infrastructure. Experience the power of decentralized technology with ease."
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
 
       <meta property="profile:first_name" content="GoGoPool" />
@@ -123,7 +126,7 @@ export const Description = () => {
       <meta name="twitter:title" content="GoGoPool Dashboard" />
       <meta
         name="twitter:description"
-        content="GoGoPool - Deploy apps seamlessly to decentralized infrastructure. Experience the power of decentralized technology with ease."
+        content="GoGoPool Metrics Dashboard created by dappling.network"
       />
       <meta name="twitter:image" content="/images/tree-with-text.jpg" />
     </Head>

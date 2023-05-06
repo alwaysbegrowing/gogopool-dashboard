@@ -8,7 +8,7 @@ import { formatDistance } from "date-fns";
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 
 const App: React.FC = ({ data, isLoading }: any) => {
-  const reversedData = data.toReversed();
+  const reversedData = data ? data.toReversed() : [];
   console.log(data);
   return (
     // <Card title="Minipools">
