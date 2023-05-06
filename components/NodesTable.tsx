@@ -13,6 +13,7 @@ const App: React.FC = ({ data, isLoading }: any) => {
   return (
     // <Card title="Minipools">
     <Table
+      size="small"
       title={() => <div>Minipools</div>}
       scroll={{ x: true }}
       bordered={false}
