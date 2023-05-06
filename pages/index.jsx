@@ -48,6 +48,7 @@ export default function Home() {
         <Card loading={isLoading} bordered={false}>
           <Statistic
             title="Active Minipools"
+            prefix={<ArrowUpOutlined />}
             valueStyle={{ color: "#3f8600" }}
             value={data?.[0].toNumber()}
           />
