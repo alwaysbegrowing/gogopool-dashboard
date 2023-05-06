@@ -48,7 +48,6 @@ const App: React.FC = ({ data, isLoading }: any) => {
           return n.div(weiValue).toNumber();
         }}
       />
-      {/* <Column title="Node ID" dataIndex="1" key="1" /> */}
       <Column
         title="Created"
         dataIndex="11"
