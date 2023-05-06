@@ -69,7 +69,7 @@ export default function Home() {
           </Card>
         </Col>
         <Col xs={24} lg={12}>
-          <Card loading={false} bordered={false}>
+          <Card loading={isLoading} bordered={false}>
             <Statistic
               valueStyle={{ color: "#3f8600" }}
               prefix={<ArrowUpOutlined />}
