@@ -47,14 +47,7 @@ export default function Home() {
 
   return (
     <Layout
-    headerExtra={
-      <Button
-        size="large"
-        type="ghost"
-        href="https://github.com/alwaysbegrowing/gogopool-dashboard"
-        icon={<GithubOutlined style={{ color: "white" }} />}
-      ></Button>
-    }
+  
   >
     <Space direction="vertical" size="large">
       <Row gutter={[24, 24]}>

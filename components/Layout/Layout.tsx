@@ -1,8 +1,17 @@
-import { ReactNode } from "react";
-import { Layout, Space, Grid } from "antd";
+import { ReactNode, useState } from "react";
+import { Layout, Space, Grid, Button, Menu } from "antd";
 import Link from "next/link";
 import CustomFooter from "./Footer";
 import { CSSProperties } from "react";
+import { GithubOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -12,7 +21,18 @@ interface LayoutProps {
   contentStyle?: CSSProperties;
   headerExtra?: any;
 }
-
+const items: MenuProps["items"] = [
+  {
+    label: "Home",
+    key: "/",
+    // icon: <MailOutlined />,
+  },
+  {
+    label: "Contracts",
+    key: "/contracts",
+    // icon: <AppstoreOutlined />,
+  },
+];
 export default function CustomLayout({
   children,
   contentStyle,
@@ -20,31 +40,55 @@ export default function CustomLayout({
 }: LayoutProps) {
   const headerHeight = 48;
   const screens = useBreakpoint();
-
+  const [current, setCurrent] = useState("mail");
+  const router = useRouter();
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
+    setCurrent(e.key);
+    router.push(e.key);
+  };
   return (
     <Layout style={{ minHeight: "100vh", backgroundColor: "#F7F9FF" }}>
       <Header
         style={{
           textAlign: "right",
           height: headerHeight,
-          backgroundColor: "#5D43EF",
+          backgroundColor: "white",
           lineHeight: `${headerHeight}px`,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Link href="/">
-          <img
-            src="https://www.gitbook.com/cdn-cgi/image/width=256,dpr=2,height=40,fit=contain,format=auto/https%3A%2F%2F4110555085-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FJnYoMAcIL3VICHojy1yR%252Flogo%252F0Ya4NXRPrRLznTAgzPL0%252Fggp-logo-white%25403x.png%3Falt%3Dmedia%26token%3Dd461fb79-9986-4177-8db4-c08184b0a1c5"
-            alt="GoGoPool Logo"
-            style={{
-              marginTop: "18px",
-              height: "36px",
-            }}
+        <Space size="large">
+          <Link href="/">
+            <img
+              src="https://miro.medium.com/v2/resize:fill:176:176/1*DkTmcsAk4ARPrWCrXZH20Q.png"
+              alt="GoGoPool Logo"
+              style={{
+                color: "red",
+                marginTop: "18px",
+                height: "36px",
+                borderRadius: "50%",
+              }}
+            />
+          </Link>
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode="horizontal"
+            items={items}
           />
-        </Link>
-        <Space>{headerExtra}</Space>
+        </Space>
+        <Space>
+          {headerExtra}{" "}
+          <Button
+            size="large"
+            type="ghost"
+            href="https://github.com/alwaysbegrowing/gogopool-dashboard"
+            icon={<GithubOutlined />}
+          ></Button>
+        </Space>
       </Header>
       <Content
         style={{
