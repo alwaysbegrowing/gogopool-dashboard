@@ -4,6 +4,7 @@ const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
 import minipoolManagerABI from "../abis/minipoolmanager.json";
+import stakerABI from "../abis/staker.json";
 
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
@@ -11,10 +12,10 @@ const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 E
 
 const App: React.FC = () => {
   const { data: minipoolData, isLoading }: any = useContractRead({
-    address: "0xc8de41c35fb389286546cf4107102a7656da7037",
-    abi: minipoolManagerABI,
-    functionName: "getMinipools",
-    args: [2, 0, 100],
+    address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
+    abi: stakerABI,
+    functionName: "getStakers",
+    args: [0, 100],
   });
   const reversedData = minipoolData ? minipoolData.toReversed() : [];
   console.log(minipoolData);
@@ -30,8 +31,8 @@ const App: React.FC = () => {
       pagination={{ pageSize: 5 }}
     >
       <Column
-        title="Owner"
-        dataIndex="5"
+        title="Node Address"
+        dataIndex="0"
         key="2"
         render={(n) => {
           return (
@@ -42,14 +43,14 @@ const App: React.FC = () => {
         }}
       />
       <Column
-        title="Node OP Avax"
-        dataIndex="8"
+        title="GGP Staked"
+        dataIndex="6"
         key="2"
         render={(n) => {
           return n.div(weiValue).toNumber();
         }}
       />
-      <Column
+      {/* <Column
         title="Liquid Staker Avax"
         dataIndex="9"
         key="2"
@@ -69,7 +70,7 @@ const App: React.FC = () => {
 
           return timeAgo;
         }}
-      />
+      /> */}
     </Table>
     // </Card>
   );
