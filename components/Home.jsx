@@ -4,14 +4,14 @@ import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { useContractReads } from "wagmi";
 import { useIsMounted } from "../hooks/mounted";
 import NodesTable from "./NodesTable";
+import NodeOpsTable from './NodeOpsTable'
 const { ethers } = require("ethers");
 import Layout from './Layout/Layout';
-import { GithubOutlined } from "@ant-design/icons";
 
 import minipoolManagerABI from "../abis/minipoolmanager.json";
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 
-const minipoolmanagerContract = {
+export const minipoolmanagerContract = {
   address: "0xc8de41c35fb389286546cf4107102a7656da7037",
   abi: minipoolManagerABI,
 };
@@ -31,19 +31,9 @@ export default function Home() {
     ],
   });
 
-  const { data: minipoolData, isLoading: isLoadingMinipools } =
-    useContractReads({
-      contracts: [
-        {
-          ...minipoolmanagerContract,
-          functionName: "getMinipools",
-          args: [2, 0, 100],
-        },
-      ],
-    });
+
 
   if (!isMounted) return null;
-  console.log({ data, minipoolData });
 
   return (
     <Layout
@@ -73,7 +63,9 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
-      <NodesTable isLoading={isLoadingMinipools} data={minipoolData?.[0]} />
+      <NodesTable />
+      {/* <NodeOpsTable  /> */}
+
     </Space>
     </Layout>
   );
