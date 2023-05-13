@@ -50,7 +50,7 @@ const App: React.FC = () => {
             return (
               <>
                 <Link
-                  copyable
+                  copyable={{ text: nodeHexToID(n) }}
                   href={`https://avascan.info/staking/validator/${nodeHexToID(
                     n
                   )}`}
@@ -70,7 +70,10 @@ const App: React.FC = () => {
               <>
                 {hashEmoji(n)}
                 {` `}
-                <Link copyable href={`https://snowtrace.io/address/${n}`}>
+                <Link
+                  copyable={{ text: n }}
+                  href={`https://snowtrace.io/address/${n}`}
+                >
                   {<FormattedAddress address={n} />}
                 </Link>
               </>

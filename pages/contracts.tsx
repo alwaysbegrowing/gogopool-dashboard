@@ -76,7 +76,6 @@ const columns = [
       <Link
         href={`https://snowtrace.io/address/${address}#readContract`}
         style={{ fontFamily: "'Source Code Pro', monospace" }}
-        copyable
       >
         {address}
       </Link>
