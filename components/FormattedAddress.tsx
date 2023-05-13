@@ -13,7 +13,7 @@ export function shortenCryptoAddress(address: string, prefixLength = 6) {
   return shortenedAddress;
 }
 
-export const FormattedAddress = ({ address, prefix = 6 }) => {
+export const FormattedAddress = ({ address, prefix = 6 }: any) => {
   return (
     <span style={{ fontFamily: "'Source Code Pro', monospace" }}>
       {shortenCryptoAddress(address, prefix)}

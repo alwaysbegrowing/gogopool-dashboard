@@ -67,24 +67,19 @@ const columns = [
     title: "Contracts",
     dataIndex: "contract",
     key: "contract",
-    render: (name: any, item: any) => {
-      return (
-        <Link
-          href={`https://snowtrace.io/address/${item.address}#readContract`}
-        >
-          {name}
-        </Link>
-      );
-    },
   },
   {
     title: "Addresses",
     dataIndex: "address",
     key: "address",
     render: (address: string) => (
-      <Text style={{ fontFamily: "'Source Code Pro', monospace" }} copyable>
+      <Link
+        href={`https://snowtrace.io/address/${address}#readContract`}
+        style={{ fontFamily: "'Source Code Pro', monospace" }}
+        copyable
+      >
         {address}
-      </Text>
+      </Link>
     ),
   },
 ];
