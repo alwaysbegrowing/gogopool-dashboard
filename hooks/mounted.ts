@@ -16,6 +16,11 @@ export const minipoolmanagerContract: Mp = {
   abi: minipoolManagerABI as any,
 };
 
+export const stakingContract: Mp = {
+  address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
+  abi: stakerABI as any,
+};
+
 export const useIsMounted = () => {
   const [mounted, setMounted] = React.useState(false);
 
@@ -52,6 +57,22 @@ export const useStakers = () => {
     abi: stakerABI,
     functionName: "getStakers",
     args: [0, 1000],
+  });
+  return { data, isLoading };
+};
+
+export const useStakingInfo = () => {
+  const { data, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        ...stakingContract,
+        functionName: "getStakerCount",
+      },
+      {
+        ...stakingContract,
+        functionName: "getTotalGGPStake",
+      },
+    ],
   });
   return { data, isLoading };
 };

@@ -5,15 +5,17 @@ import { useIsMounted } from "../hooks/mounted";
 import NodesTable from "./NodesTable";
 import NodeOpsTable from './NodeOpsTable'
 import Layout from './Layout/Layout';
-import { useMinipools } from "../hooks/mounted";
+import { useMinipools, useStakingInfo } from "../hooks/mounted";
 import { toWei } from "../hooks/mounted";
 
 
 export default function Home() {
   const isMounted = useIsMounted();
   const {data, isLoading} = useMinipools()
-console.log({data})
+  const {data: stakerData, isLoading: isLoadingStakers} = useStakingInfo()
   const [minipoolCount, totalStakedAMount, allMinipools] = data || []
+  const [stakersCount, ggpStaked] = stakerData || []
+
 
 
   if (!isMounted) return null;
@@ -24,7 +26,7 @@ console.log({data})
   >
     <Space direction="vertical" size="large">
       <Row gutter={[24, 24]}>
-        <Col xs={24} lg={12}>
+        <Col xs={12} md={12} lg={6}>
           <Card loading={isLoading} bordered={false}>
             <Statistic
               title="Active Minipools"
@@ -34,13 +36,29 @@ console.log({data})
             />
           </Card>
         </Col>
-        <Col xs={24} lg={12}>
+        <Col xs={12} md={12} lg={6}>
           <Card loading={isLoading} bordered={false}>
             <Statistic
-              valueStyle={{ color: "#3f8600" }}
-              prefix={<ArrowUpOutlined />}
-              title="AVAX Staked by Liquid Stakers"
+              title="Total Stakers"
+              value={stakersCount}
+            />
+          </Card>
+        </Col>
+        <Col xs={12} md={12}  lg={6}>
+          <Card loading={isLoading} bordered={false}>
+            <Statistic
+              title="AVAX Staked"
               value={toWei(totalStakedAMount)}
+              precision={0}
+            />
+          </Card>
+        </Col>
+   
+        <Col  xs={12} md={12} lg={6}>
+          <Card loading={isLoading} bordered={false}>
+            <Statistic
+              title="GGP Staked"
+              value={toWei(ggpStaked)}
               precision={0}
             />
           </Card>

@@ -36,9 +36,13 @@ const App: React.FC = () => {
           key="2"
           render={(n) => {
             return (
-              <Link copyable href={`https://snowtrace.io/address/${n}`}>
-                {hashEmoji(n)} {n}
-              </Link>
+              <>
+                {hashEmoji(n)}
+                {` `}
+                <Link copyable href={`https://snowtrace.io/address/${n}`}>
+                  {n}
+                </Link>
+              </>
             );
           }}
         />
