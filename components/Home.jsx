@@ -47,7 +47,7 @@ console.log({data})
         </Col>
       </Row>
       <NodesTable />
-      {/* <NodeOpsTable  /> */}
+      <NodeOpsTable  />
 
     </Space>
     </Layout>

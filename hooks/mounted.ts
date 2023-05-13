@@ -51,12 +51,12 @@ export const useStakers = () => {
     address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
     abi: stakerABI,
     functionName: "getStakers",
-    args: [0, 100],
+    args: [0, 1000],
   });
   return { data, isLoading };
 };
 
 export const toWei = (n: BigNumber) => {
-  if (!n) return null;
+  if (!n) return 0;
   return n.div(weiValue).toNumber();
 };

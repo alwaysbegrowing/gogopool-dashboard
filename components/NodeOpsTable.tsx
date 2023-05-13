@@ -4,46 +4,66 @@ const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
 import stakerABI from "../abis/staker.json";
-
+import { toWei } from "../hooks/mounted";
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
 import { useStakers } from "@/hooks/mounted";
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
+const hashEmoji = require("hash-emoji");
+const { Text, Link } = Typography;
 
 const App: React.FC = () => {
   const { data, isLoading } = useStakers();
 
+  if (!data) return <></>;
+
+  const cleanedData = [] as any;
+  data.forEach((staker: any) => {
+    if (toWei(staker[3])) {
+      cleanedData.push(staker);
+    }
+  });
+  cleanedData.sort((a: any, b: any) => toWei(b[6]) - toWei(a[6]));
+
   return (
-    <Table
-      size="small"
-      title={() => <div>Minipools</div>}
-      scroll={{ x: true }}
-      bordered={false}
-      loading={isLoading}
-      dataSource={data}
-      pagination={{ pageSize: 5 }}
-    >
-      <Column
-        title="Node Address"
-        dataIndex="0"
-        key="2"
-        render={(n) => {
-          return (
-            <Button type="ghost" href={`https://snowtrace.io/address/${n}`}>
-              {n}
-            </Button>
-          );
-        }}
-      />
-      <Column
-        title="GGP Staked"
-        dataIndex="6"
-        key="2"
-        render={(n) => {
-          return n.div(weiValue).toNumber();
-        }}
-      />
-      {/* <Column
+    <Card title="Node Operators">
+      <Table
+        size="small"
+        scroll={{ x: true }}
+        loading={isLoading}
+        dataSource={cleanedData}
+        pagination={{ pageSize: 5 }}
+      >
+        <Column
+          title="Node Address"
+          dataIndex="0"
+          key="2"
+          render={(n) => {
+            return (
+              <Link copyable href={`https://snowtrace.io/address/${n}`}>
+                {hashEmoji(n)} {n}
+              </Link>
+            );
+          }}
+        />
+        <Column
+          title="GGP Staked"
+          dataIndex="6"
+          key="2"
+          render={(n) => {
+            return toWei(n).toLocaleString();
+          }}
+        />
+
+        <Column
+          title="Minipools"
+          dataIndex="3"
+          key="2"
+          render={(n) => {
+            return toWei(n) / 1000;
+          }}
+        />
+        {/* <Column
         title="Liquid Staker Avax"
         dataIndex="9"
         key="2"
@@ -64,8 +84,8 @@ const App: React.FC = () => {
           return timeAgo;
         }}
       /> */}
-    </Table>
-    // </Card>
+      </Table>
+    </Card>
   );
 };
 
