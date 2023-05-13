@@ -93,8 +93,8 @@ export default function CustomLayout({
       <Content
         style={{
           paddingTop: "24px",
-          paddingRight: screens.lg ? 48 : 8,
-          paddingLeft: screens.lg ? 48 : 8,
+          paddingRight: screens.sm ? 48 : 8,
+          paddingLeft: screens.sm ? 48 : 8,
           height: `calc(100% - ${headerHeight}px)`,
           overflow: "auto",
           display: "flex",
