@@ -1,6 +1,7 @@
 import React from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Typography } from "antd";
 import CustomLayout from "@/components/Layout/Layout";
+const { Link, Text } = Typography;
 
 const data = [
   {
@@ -66,20 +67,21 @@ const columns = [
     title: "Contracts",
     dataIndex: "contract",
     key: "contract",
+    render: (name: any, item: any) => {
+      return (
+        <Link
+          href={`https://snowtrace.io/address/${item.address}#readContract`}
+        >
+          {name}
+        </Link>
+      );
+    },
   },
   {
     title: "Addresses",
     dataIndex: "address",
     key: "address",
-    render: (address: string) => (
-      <Button
-        style={{ marginLeft: -16 }}
-        type="ghost"
-        href={`https://snowtrace.io/address/${address}#code`}
-      >
-        {address}
-      </Button>
-    ),
+    render: (address: string) => <Text copyable>{address}</Text>,
   },
 ];
 
