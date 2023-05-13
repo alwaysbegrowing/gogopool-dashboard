@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Typography } from "antd";
+import { Table, Button, Typography, Card } from "antd";
 import CustomLayout from "@/components/Layout/Layout";
 const { Link, Text } = Typography;
 
@@ -87,13 +87,14 @@ const columns = [
 
 const ContractTable = () => {
   return (
-    <Table
-      title={() => <div>GoGoPool Contracts</div>}
-      size="small"
-      pagination={{ pageSize: 50 }}
-      dataSource={data}
-      columns={columns}
-    />
+    <Card title="GoGoPool Contracts">
+      <Table
+        size="small"
+        pagination={{ pageSize: 50 }}
+        dataSource={data}
+        columns={columns}
+      />
+    </Card>
   );
 };
 
