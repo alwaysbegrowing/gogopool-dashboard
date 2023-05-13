@@ -8,7 +8,18 @@ const hashEmoji = require("hash-emoji");
 const { Text, Link } = Typography;
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
+import { BinTools } from "avalanche";
+
+const bintools = BinTools.getInstance();
+
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
+
+const nodeHexToID = (h: any) => {
+  if (!h) return "";
+  console.log(h);
+  const b = Buffer.from(ethers.utils.arrayify(ethers.utils.getAddress(h)));
+  return `NodeID-${bintools.cb58Encode(b as any)}`;
+};
 
 const App: React.FC = () => {
   const { data: minipoolData, isLoading }: any = useContractRead({
@@ -30,6 +41,25 @@ const App: React.FC = () => {
         dataSource={reversedData}
         pagination={{ pageSize: 5 }}
       >
+        <Column
+          title="NodeID"
+          dataIndex="1"
+          key="nodeID"
+          render={(n) => {
+            return (
+              <>
+                <Link
+                  copyable
+                  href={`https://avascan.info/staking/validator/${nodeHexToID(
+                    n
+                  )}`}
+                >
+                  {nodeHexToID(n)}
+                </Link>
+              </>
+            );
+          }}
+        />
         <Column
           title="Owner"
           dataIndex="5"
