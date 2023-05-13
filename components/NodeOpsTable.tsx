@@ -3,22 +3,15 @@ import { Card, Table, Button, Typography } from "antd";
 const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
-import minipoolManagerABI from "../abis/minipoolmanager.json";
 import stakerABI from "../abis/staker.json";
 
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
+import { useStakers } from "@/hooks/mounted";
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 
 const App: React.FC = () => {
-  const { data: minipoolData, isLoading }: any = useContractRead({
-    address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
-    abi: stakerABI,
-    functionName: "getStakers",
-    args: [0, 100],
-  });
-  const reversedData = minipoolData ? minipoolData.toReversed() : [];
-  console.log(minipoolData);
+  const { data, isLoading } = useStakers();
 
   return (
     <Table
@@ -27,7 +20,7 @@ const App: React.FC = () => {
       scroll={{ x: true }}
       bordered={false}
       loading={isLoading}
-      dataSource={reversedData}
+      dataSource={data}
       pagination={{ pageSize: 5 }}
     >
       <Column
