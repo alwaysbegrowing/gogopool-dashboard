@@ -81,7 +81,11 @@ const columns = [
     title: "Addresses",
     dataIndex: "address",
     key: "address",
-    render: (address: string) => <Text copyable>{address}</Text>,
+    render: (address: string) => (
+      <Text style={{ fontFamily: "'Source Code Pro', monospace" }} copyable>
+        {address}
+      </Text>
+    ),
   },
 ];
 

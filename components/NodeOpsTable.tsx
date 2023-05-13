@@ -11,6 +11,7 @@ import { useStakers } from "@/hooks/mounted";
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 const hashEmoji = require("hash-emoji");
 const { Text, Link } = Typography;
+import { shortenCryptoAddress } from "../hooks/mounted";
 
 const App: React.FC = () => {
   const { data, isLoading } = useStakers();
@@ -44,7 +45,7 @@ const App: React.FC = () => {
                 {hashEmoji(n)}
                 {` `}
                 <Link copyable href={`https://snowtrace.io/address/${n}`}>
-                  {n}
+                  {shortenCryptoAddress(n)}
                 </Link>
               </>
             );

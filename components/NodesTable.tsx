@@ -9,6 +9,7 @@ const { Text, Link } = Typography;
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
 import { BinTools } from "avalanche";
+import { shortenCryptoAddress } from "../hooks/mounted";
 
 const bintools = BinTools.getInstance();
 
@@ -54,7 +55,7 @@ const App: React.FC = () => {
                     n
                   )}`}
                 >
-                  {nodeHexToID(n)}
+                  {shortenCryptoAddress(nodeHexToID(n), 11)}
                 </Link>
               </>
             );
@@ -70,7 +71,7 @@ const App: React.FC = () => {
                 {hashEmoji(n)}
                 {` `}
                 <Link copyable href={`https://snowtrace.io/address/${n}`}>
-                  {n}
+                  {shortenCryptoAddress(n)}
                 </Link>
               </>
             );
