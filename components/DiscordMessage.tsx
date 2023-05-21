@@ -9,7 +9,16 @@ export function colorIntToHex(color: number) {
   return "#" + color.toString(16).padStart(6, "0");
 }
 
+const buttonColors: { [key: string]: string } = {
+  1: "discord-button-primary",
+  2: "discord-button-secondary",
+  3: "discord-button-success",
+  4: "discord-button-destructive",
+  5: "discord-button-secondary",
+};
+
 export default function DiscordMessage({ msg, timestamp }: any) {
+  console.log(msg);
   const time = formatDistanceToNow(timestamp, { addSuffix: true });
   return (
     <Space direction="vertical">
@@ -178,11 +187,59 @@ export default function DiscordMessage({ msg, timestamp }: any) {
                     </div>
                   );
                 })}
+              <div className="discord-attachments">
+                {msg.components.map((row: any) => (
+                  <div className="discord-action-row" key={row.id}>
+                    {row.components.map(({ data: comp }: any) =>
+                      comp.type === 2 ? (
+                        comp.style === 5 ? (
+                          <a
+                            className={`discord-button discord-button-hoverable ${
+                              buttonColors[comp.style]
+                            }`}
+                            key={comp.id}
+                            target="_blank"
+                            href={comp.url}
+                            rel="noreferrer"
+                          >
+                            <span>{comp.label}</span>
+                            <svg
+                              className="discord-button-launch"
+                              aria-hidden="false"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M10 5V3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V14H19V19H5V5H10Z"
+                              ></path>
+                              <path
+                                fill="currentColor"
+                                d="M21 2.99902H14V4.99902H17.586L9.29297 13.292L10.707 14.706L19 6.41302V9.99902H21V2.99902Z"
+                              ></path>
+                            </svg>
+                          </a>
+                        ) : (
+                          <div
+                            className={`discord-button discord-button-hoverable ${
+                              buttonColors[comp.style]
+                            }`}
+                            key={comp.id}
+                          >
+                            <span>{comp.label}</span>
+                          </div>
+                        )
+                      ) : undefined
+                    )}
+                  </div>
+                ))}
+              </div>
+              <Text type="secondary">{time}</Text>
             </div>
           </div>
         </div>
       </div>
-      <Text type="secondary">{time}</Text>
     </Space>
   );
 }

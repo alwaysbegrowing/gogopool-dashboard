@@ -57,7 +57,6 @@ export function Events() {
               total={messages?.data?.length || 0}
               onChange={onChange}
               showTotal={(total, range) => {
-                console.log({ total, range });
                 if (range[0] < 0) return `1 - ${total} of items`;
                 return `${range[0]}-${range[1]} of ${total} items`;
               }}
