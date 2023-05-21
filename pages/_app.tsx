@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/discordMessage.css";
 
 import type { AppProps } from "next/app";
 import { WagmiConfig, createClient } from "wagmi";
