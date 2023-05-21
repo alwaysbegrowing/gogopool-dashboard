@@ -20,9 +20,12 @@
     "eslint-config-next": "13.4.1",
     "ethers": "^5.7.2",
     "hash-emoji": "^0.0.4",
+    "highlight.js": "^11.8.0",
+    "mongodb": "^5.5.0",
     "next": "13.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "simple-markdown": "^0.7.3",
     "typescript": "5.0.4",
     "wagmi": "^0.12.13"
   }
