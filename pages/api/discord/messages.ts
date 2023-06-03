@@ -8,7 +8,7 @@ const componentFilter = (search?: string) => {
       $elemMatch: {
         components: {
           $elemMatch: {
-            'data.url': {
+            "data.url": {
               $regex: search,
               $options: "i",
             },
@@ -19,7 +19,10 @@ const componentFilter = (search?: string) => {
   };
 };
 
-type Data = WithId<Record<string, unknown>>[];
+type Data = {
+  results: WithId<Record<string, unknown>>[];
+  count: number;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,13 +35,16 @@ export default async function handler(
   const client = new MongoClient(uri, {});
   const db = client.db("gogopool");
 
+  const filter = componentFilter(owner);
+  const count = await db.collection("events").countDocuments(filter);
   const results = await db
     .collection("events")
-    .find(componentFilter(owner))
+    .find(filter)
+    .sort({ timestamp: -1 })
     .skip((page - 1) * limit)
     .limit(limit)
     .toArray();
 
   await client.close();
-  res.status(200).json(results);
+  res.status(200).json({ results, count });
 }

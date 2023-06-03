@@ -8,8 +8,12 @@ export function Events() {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
-  const [messages, setMessages] = useState<{ data: any[]; loading: boolean }>({
-    data: [],
+  const [total, setTotal] = useState<number>(0);
+  const [events, setEvents] = useState<{
+    messages: any[];
+    loading: boolean;
+  }>({
+    messages: [],
     loading: false,
   });
 
@@ -21,15 +25,20 @@ export function Events() {
 
   useEffect(() => {
     async function getMessages() {
-      setMessages({ data: [], loading: true });
-      const messages = await fetch(
+      setEvents({ messages: [], loading: true });
+      const response = await fetch(
         `/api/discord/messages?limit=${limit || 1000}&page=${page || 1}&owner=${
           owner || ""
         }`
       )
         .then((res) => res.json())
         .catch(console.error);
-      setMessages({ data: messages, loading: false });
+      console.log(response);
+      setEvents({
+        messages: response.results,
+        loading: false,
+      });
+      setTotal(response.count);
     }
     getMessages();
   }, [page, limit, owner]);
@@ -54,7 +63,7 @@ export function Events() {
               onChange={(e) => setSearch(e.target.value)}
             />
             <Pagination
-              total={messages?.data?.length || 0}
+              total={total || 0}
               onChange={onChange}
               showTotal={(total, range) => {
                 if (range[0] < 0) return `1 - ${total} of items`;
@@ -67,9 +76,9 @@ export function Events() {
         </Col>
       </Row>
       <DiscordMessages
-        loading={messages.loading}
+        loading={events.loading}
         limit={limit}
-        messages={messages.data}
+        messages={events.messages}
       />
     </Space>
   );
