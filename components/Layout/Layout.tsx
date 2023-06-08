@@ -37,6 +37,10 @@ const items: MenuProps["items"] = [
     key: "/events",
     // icon: <AppstoreOutlined />,
   },
+  {
+    label: "Calculator",
+    key: "/calculator",
+  },
 ];
 export default function CustomLayout({
   children,

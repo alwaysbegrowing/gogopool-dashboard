@@ -3,7 +3,7 @@ import { Card, Table, Button, Typography } from "antd";
 const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
-import minipoolManagerABI from "../abis/minipoolmanager.json";
+import minipoolManagerABI from "../abis/minipoolmanager";
 const hashEmoji = require("hash-emoji");
 const { Text, Link } = Typography;
 const { Column, ColumnGroup } = Table;
