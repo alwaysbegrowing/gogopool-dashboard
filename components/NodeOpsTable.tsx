@@ -3,7 +3,6 @@ import { Card, Table, Button, Typography } from "antd";
 const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
-import stakerABI from "../abis/staker.json";
 import { toWei } from "../hooks/mounted";
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";

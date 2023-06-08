@@ -3,13 +3,14 @@ import { Card, Table, Button, Typography } from "antd";
 const { ethers } = require("ethers");
 const { Title } = Typography;
 import { useContractRead } from "wagmi";
-import minipoolManagerABI from "../abis/minipoolmanager";
 const hashEmoji = require("hash-emoji");
 const { Text, Link } = Typography;
 const { Column, ColumnGroup } = Table;
 import { formatDistance } from "date-fns";
 import { BinTools } from "avalanche";
 import { FormattedAddress } from "./FormattedAddress";
+import { minipoolManagerAbi } from "@/abis/minipoolmanager";
+import { BigNumber } from "ethers";
 
 const bintools = BinTools.getInstance();
 
@@ -25,9 +26,9 @@ const nodeHexToID = (h: any) => {
 const App: React.FC = () => {
   const { data: minipoolData, isLoading }: any = useContractRead({
     address: "0xc8de41c35fb389286546cf4107102a7656da7037",
-    abi: minipoolManagerABI,
+    abi: minipoolManagerAbi,
     functionName: "getMinipools",
-    args: [2, 0, 100],
+    args: [2, BigNumber.from(0), BigNumber.from(100)],
   });
   const reversedData = minipoolData ? minipoolData.toReversed() : [];
   console.log(minipoolData);
