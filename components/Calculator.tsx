@@ -7,9 +7,9 @@ import {
 import { useStakers } from "@/hooks/mounted";
 import { Col, Row, Space, Table, Typography } from "antd";
 import { BigNumber } from "ethers";
-import { commify, formatEther } from "ethers/lib/utils.js";
 import { useState } from "react";
-import { CopyableAddress } from "./Copyable";
+import { NodeOpRewardTable } from "./NodeOpRewardTable";
+import { RatioRewardsTable } from "./RatioRewardsTable";
 
 const { Title } = Typography;
 const INVESTOR = "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127";
@@ -17,6 +17,40 @@ const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
 
 export function Calculator() {
+  const getStakerReward = (staker: any) => {
+    if (staker.stakerAddr == INVESTOR) {
+      return getReward(
+        staker.effectiveGGPStaked,
+        investorTegs,
+        INVESTOR_REWARD_AMOUNT
+      );
+    }
+    return getReward(
+      staker.effectiveGGPStaked,
+      retailTegs,
+      RETAIL_REWARD_AMOUNT
+    );
+  };
+
+  const getReward = (
+    ggpStake: BigNumber,
+    totalGGPStake: BigNumber,
+    rewardAmount: BigNumber
+  ) => {
+    return ggpStake
+      .mul(weiValue)
+      .div(totalGGPStake)
+      .mul(rewardAmount)
+      .div(weiValue);
+  };
+
+  const getPercentStake = (staker: any) => {
+    if (staker.stakerAddr == INVESTOR) {
+      return staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
+    }
+    return staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
+  };
+
   const [avaxAmount, setAvaxAmount] = useState<BigNumber>(BigNumber.from(1000));
 
   const { data: stakers } = useStakers();
@@ -58,7 +92,11 @@ export function Calculator() {
         investorTegs = investorTegs.add(effectiveGGPStaked);
       }
 
-      return { ...staker, effectiveGGPStaked };
+      const collateralRatio = ggpAsAVAX
+        .mul(weiValue)
+        .div(staker.avaxValidatingHighWater);
+
+      return { ...staker, effectiveGGPStaked, collateralRatio };
     });
 
   // calculations that depend on TotalEligibleGGPStaked (tegs)
@@ -87,68 +125,6 @@ export function Calculator() {
     (staker) =>
       staker.stakerAddr == "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"
   );
-
-  const baseColumns = [
-    {
-      title: "Effective GGP Staked",
-      dataIndex: "ggpStake",
-      key: "ggpStake",
-      render: (ggpStake: string) => (
-        <>{`${commify((+formatEther(ggpStake)).toFixed(2))}`}</>
-      ),
-    },
-    {
-      title: "Share of All GGP Staked",
-      dataIndex: "percentStake",
-      key: "percentStake",
-      render: (percentStake: string) => (
-        <>{`${(+formatEther(percentStake) * 100).toFixed(2)}%`}</>
-      ),
-    },
-    {
-      title: "GGP Reward",
-      dataIndex: "reward",
-      key: "reward",
-      render: (ggpReward: string) => (
-        <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>
-      ),
-    },
-    {
-      title: "Reward amount in AVAX",
-      dataIndex: "inAvax",
-      key: "inAvax",
-      render: (inAvax: string) => (
-        <>{`${commify((+formatEther(inAvax)).toFixed(2))}`}</>
-      ),
-    },
-    {
-      title: "Reward amount in USD",
-      dataIndex: "inUsd",
-      key: "inUsd",
-      render: (inUsd: string) => (
-        <>{`$${commify((+formatEther(inUsd)).toFixed(2))}`}</>
-      ),
-    },
-  ];
-
-  const rewardsColumns = [
-    {
-      title: "GGP Collateralization",
-      dataIndex: "collat",
-      key: "collat",
-    },
-    ...baseColumns,
-  ];
-
-  const stakerColumns = [
-    {
-      title: "Staker Addr",
-      dataIndex: "stakerAddr",
-      key: "stakerAddr",
-      render: (stakerAddr: string) => <CopyableAddress address={stakerAddr} />,
-    },
-    ...baseColumns,
-  ];
 
   let rewardAmounts = [
     {
@@ -191,40 +167,6 @@ export function Calculator() {
     };
   });
 
-  const getStakerReward = (staker: any) => {
-    if (staker.stakerAddr == INVESTOR) {
-      return getReward(
-        staker.effectiveGGPStaked,
-        investorTegs,
-        INVESTOR_REWARD_AMOUNT
-      );
-    }
-    return getReward(
-      staker.effectiveGGPStaked,
-      retailTegs,
-      RETAIL_REWARD_AMOUNT
-    );
-  };
-
-  const getReward = (
-    ggpStake: BigNumber,
-    totalGGPStake: BigNumber,
-    rewardAmount: BigNumber
-  ) => {
-    return ggpStake
-      .mul(weiValue)
-      .div(totalGGPStake)
-      .mul(rewardAmount)
-      .div(weiValue);
-  };
-
-  const getPercentStake = (staker: any) => {
-    if (staker.stakerAddr == INVESTOR) {
-      return staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
-    }
-    return staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
-  };
-
   return (
     <Space direction="vertical">
       <Row justify={"center"}>
@@ -244,32 +186,17 @@ export function Calculator() {
               </Col> */}
             </Row>
           </Space>
-          <h2>Rewards for a new minipool</h2>
-          <Table columns={rewardsColumns} dataSource={rewardAmounts} />
-          <Row justify="center" align="middle" gutter={32}>
-            <Col>
-              <h2>Existing Node Operators</h2>
-            </Col>
-            <Col>
-              <h3>
-                GGP Staked:{" "}
-                {`${commify((+formatEther(retailTegs)).toFixed(2))}`}
-              </h3>
-            </Col>
-          </Row>
-          <Table columns={stakerColumns} dataSource={retailStakers} />
-          <Row justify="center" align="middle" gutter={32}>
-            <Col>
-              <h2>Existing Investors</h2>
-            </Col>
-            <Col>
-              <h3>
-                GGP Staked:{" "}
-                {`${commify((+formatEther(investorTegs)).toFixed(2))}`}
-              </h3>
-            </Col>
-          </Row>
-          <Table columns={stakerColumns} dataSource={investorStakers} />
+          <RatioRewardsTable rewardAmounts={rewardAmounts} />
+          <NodeOpRewardTable
+            title={"Retail Node Ops"}
+            ggpStaked={retailTegs}
+            stakers={retailStakers}
+          />
+          <NodeOpRewardTable
+            title={"Investor Node Ops"}
+            ggpStaked={investorTegs}
+            stakers={investorStakers}
+          />
         </Col>
       </Row>
     </Space>

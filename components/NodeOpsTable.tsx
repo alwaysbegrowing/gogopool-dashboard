@@ -1,11 +1,8 @@
 import React from "react";
-import { Card, Table, Typography } from "antd";
+import { Card, Table } from "antd";
 import { toWei } from "../hooks/mounted";
 const { Column } = Table;
 import { useStakers } from "@/hooks/mounted";
-const hashEmoji = require("hash-emoji");
-const { Link } = Typography;
-import { FormattedAddress } from "./FormattedAddress";
 import { CopyableAddress } from "./Copyable";
 
 const App: React.FC = () => {
