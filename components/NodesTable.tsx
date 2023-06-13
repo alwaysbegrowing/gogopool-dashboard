@@ -1,27 +1,17 @@
 import React from "react";
-import { Card, Table, Button, Typography } from "antd";
+import { Card, Table } from "antd";
 const { ethers } = require("ethers");
-const { Title } = Typography;
 import { useContractRead } from "wagmi";
-const hashEmoji = require("hash-emoji");
-const { Text, Link } = Typography;
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 import { formatDistance } from "date-fns";
 import { BinTools } from "avalanche";
-import { FormattedAddress } from "./FormattedAddress";
 import { minipoolManagerAbi } from "@/abis/minipoolmanager";
 import { BigNumber } from "ethers";
+import { CopyableAddress, CopyableNodeId } from "./Copyable";
 
 const bintools = BinTools.getInstance();
 
 const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
-
-const nodeHexToID = (h: any) => {
-  if (!h) return "";
-  console.log(h);
-  const b = Buffer.from(ethers.utils.arrayify(ethers.utils.getAddress(h)));
-  return `NodeID-${bintools.cb58Encode(b as any)}`;
-};
 
 const App: React.FC = () => {
   const { data: minipoolData, isLoading }: any = useContractRead({
@@ -31,7 +21,6 @@ const App: React.FC = () => {
     args: [2, BigNumber.from(0), BigNumber.from(100)],
   });
   const reversedData = minipoolData ? minipoolData.toReversed() : [];
-  console.log(minipoolData);
 
   return (
     <Card title="Minipools">
@@ -47,19 +36,8 @@ const App: React.FC = () => {
           title="NodeID"
           dataIndex="1"
           key="nodeID"
-          render={(n) => {
-            return (
-              <>
-                <Link
-                  copyable={{ text: nodeHexToID(n) }}
-                  href={`https://avascan.info/staking/validator/${nodeHexToID(
-                    n
-                  )}`}
-                >
-                  {<FormattedAddress prefix={11} address={nodeHexToID(n)} />}
-                </Link>
-              </>
-            );
+          render={(n: string) => {
+            return <CopyableNodeId nodeId={n} />;
           }}
         />
         <Column
@@ -67,18 +45,7 @@ const App: React.FC = () => {
           dataIndex="5"
           key="2"
           render={(n) => {
-            return (
-              <>
-                {hashEmoji(n)}
-                {` `}
-                <Link
-                  copyable={{ text: n }}
-                  href={`https://snowtrace.io/address/${n}`}
-                >
-                  {<FormattedAddress address={n} />}
-                </Link>
-              </>
-            );
+            return <CopyableAddress address={n} />;
           }}
         />
         <Column
