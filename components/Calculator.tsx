@@ -5,34 +5,25 @@ import {
   weiValue,
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
-import { Col, Row, Space, Table, Typography } from "antd";
+import { Col, Input, Row, Space, Table, Typography } from "antd";
 import { BigNumber } from "ethers";
 import { useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
+import { parseEther, parseUnits } from "ethers/lib/utils.js";
 
 const { Title } = Typography;
 const INVESTOR = "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127";
+const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
 
 export function Calculator() {
-  const getStakerReward = (staker: any) => {
-    if (staker.stakerAddr == INVESTOR) {
-      return getReward(
-        staker.effectiveGGPStaked,
-        investorTegs,
-        INVESTOR_REWARD_AMOUNT
-      );
-    }
-    return getReward(
-      staker.effectiveGGPStaked,
-      retailTegs,
-      RETAIL_REWARD_AMOUNT
-    );
+  const isInvestorWallet = (staker: any) => {
+    return INVESTOR_LIST.includes(staker.stakerAddr);
   };
 
-  const getReward = (
+  const getRewardAmount = (
     ggpStake: BigNumber,
     totalGGPStake: BigNumber,
     rewardAmount: BigNumber
@@ -44,24 +35,16 @@ export function Calculator() {
       .div(weiValue);
   };
 
-  const getPercentStake = (staker: any) => {
-    if (staker.stakerAddr == INVESTOR) {
-      return staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
-    }
-    return staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
-  };
-
   const [avaxAmount, setAvaxAmount] = useState<BigNumber>(BigNumber.from(1000));
+  const [ggpPrice, setGgpPrice] = useState<number>(0);
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
   const { data: ggpPriceInAVAX } = useGetGGPPriceInAVAX();
 
-  if (!stakers || !minSeconds || !ggpPriceInAVAX) return <Space></Space>;
+  if (!stakers || !minSeconds || !ggpPriceInAVAX) return null;
 
-  const d = new Date();
-  const epoch = BigNumber.from(Math.floor(d.getTime() / 1000));
-
+  // Node Operators
   let retailTegs = BigNumber.from(0);
   let investorTegs = BigNumber.from(0);
 
@@ -71,11 +54,10 @@ export function Calculator() {
         toWei(staker.avaxValidatingHighWater) && staker.rewardsStartTime.gt(0)
       );
     })
-    .sort((a, b) => toWei(b.ggpStaked) - toWei(a.ggpStaked))
     .map((staker) => {
       // calculate effective ggp stake and total eligible ggp staked
       const max = staker.avaxValidatingHighWater
-        .mul(BigNumber.from("1500000000000000000"))
+        .mul(parseEther("1.5"))
         .div(weiValue);
 
       const ggpAsAVAX = staker.ggpStaked
@@ -97,12 +79,28 @@ export function Calculator() {
         .div(staker.avaxValidatingHighWater);
 
       return { ...staker, effectiveGGPStaked, collateralRatio };
-    });
+    })
+    .sort((a, b) => toWei(b.effectiveGGPStaked) - toWei(a.effectiveGGPStaked));
 
   // calculations that depend on TotalEligibleGGPStaked (tegs)
   let fullStakers = eligibleStakers.map((staker) => {
-    let reward = getStakerReward(staker);
-    let percentStake = getPercentStake(staker);
+    let reward;
+    let percentStake;
+    if (isInvestorWallet(staker)) {
+      reward = getRewardAmount(
+        staker.effectiveGGPStaked,
+        investorTegs,
+        INVESTOR_REWARD_AMOUNT
+      );
+      percentStake = staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
+    } else {
+      reward = getRewardAmount(
+        staker.effectiveGGPStaked,
+        retailTegs,
+        RETAIL_REWARD_AMOUNT
+      );
+      percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
+    }
 
     const inAvax = reward.mul(ggpPriceInAVAX.price).div(weiValue);
     const inUsd = reward.mul(ggpPriceInAVAX.price).mul(15).div(weiValue);
@@ -117,42 +115,40 @@ export function Calculator() {
   });
 
   const retailStakers = fullStakers.filter(
-    (staker) =>
-      staker.stakerAddr != "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"
+    (staker) => !isInvestorWallet(staker)
   );
 
-  const investorStakers = fullStakers.filter(
-    (staker) =>
-      staker.stakerAddr == "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"
+  const investorStakers = fullStakers.filter((staker) =>
+    isInvestorWallet(staker)
   );
 
+  // New Node variable reward amounts
   let rewardAmounts = [
     {
-      collat: "10%",
-      collatNum: BigNumber.from("100000000000000000"),
+      collateralRatioString: "10%",
+      collateralRatio: parseEther("0.1"),
     },
     {
-      collat: "50%",
-      collatNum: BigNumber.from("500000000000000000"),
+      collateralRatioString: "50%",
+      collateralRatio: parseEther("0.5"),
     },
     {
-      collat: "100%",
-      collatNum: BigNumber.from("1000000000000000000"),
+      collateralRatioString: "100%",
+      collateralRatio: parseEther("1"),
     },
     {
-      collat: "150%",
-      collatNum: BigNumber.from("1500000000000000000"),
+      collateralRatioString: "150%",
+      collateralRatio: parseEther("1.5"),
     },
   ];
 
-  // generate data for different reward amounts
   rewardAmounts = rewardAmounts.map((r) => {
     const ggpStake = avaxAmount
       .mul(weiValue)
       .div(ggpPriceInAVAX.price)
-      .mul(BigNumber.from(r.collatNum));
+      .mul(r.collateralRatio);
 
-    const reward = getReward(ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
+    const reward = getRewardAmount(ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
 
     const inAvax = reward.mul(ggpPriceInAVAX.price).div(weiValue);
     const inUsd = reward.mul(ggpPriceInAVAX.price).mul(15).div(weiValue);
@@ -186,6 +182,23 @@ export function Calculator() {
               </Col> */}
             </Row>
           </Space>
+          <h1>protocol settings</h1>
+          <Row gutter={32}>
+            <Col>
+              <div>GGP {`<>`} USD</div>
+            </Col>
+            <Col>
+              <Input type="number" value={ggpPrice} />
+            </Col>
+          </Row>
+          <Row gutter={32}>
+            <Col>
+              <div>AVAX {`<>`} USD</div>
+            </Col>
+            <Col>
+              <Input type="number" value={ggpPrice} />
+            </Col>
+          </Row>
           <RatioRewardsTable rewardAmounts={rewardAmounts} />
           <NodeOpRewardTable
             title={"Retail Node Ops"}

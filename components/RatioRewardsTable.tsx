@@ -6,6 +6,11 @@ import { CopyableAddress } from "./Copyable";
 export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
   const rewardsColumns = [
     {
+      title: "GGP Collateralization",
+      dataIndex: "collateralRatioString",
+      key: "collateralRatioString",
+    },
+    {
       title: "Effective GGP Staked",
       dataIndex: "ggpStake",
       key: "ggpStake",
@@ -44,11 +49,6 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
       render: (inUsd: string) => (
         <>{`$${commify((+formatEther(inUsd)).toFixed(2))}`}</>
       ),
-    },
-    {
-      title: "GGP Collateralization",
-      dataIndex: "collat",
-      key: "collat",
     },
   ];
 
