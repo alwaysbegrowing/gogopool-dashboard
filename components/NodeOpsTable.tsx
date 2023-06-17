@@ -68,7 +68,7 @@ const App: React.FC = () => {
           dataIndex="3"
           key="2"
           render={(n) => {
-            return toWei(n) / 1000;
+            return Math.floor(toWei(n) / 1000);
           }}
         />
         {/* <Column
