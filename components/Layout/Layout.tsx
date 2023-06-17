@@ -29,12 +29,12 @@ const items: MenuProps["items"] = [
   },
   {
     label: "Contracts",
-    key: "/contracts",
+    key: "contracts",
     // icon: <AppstoreOutlined />,
   },
   {
     label: "Events",
-    key: "/events",
+    key: "events",
     // icon: <AppstoreOutlined />,
   },
 ];
