@@ -12,7 +12,7 @@ import {
   MailOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-
+//test
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -107,7 +107,7 @@ export default function CustomLayout({
           justifyContent: "space-between",
           ...contentStyle,
         }}
-      >
+      > 
         {children}
         <CustomFooter />
       </Content>
