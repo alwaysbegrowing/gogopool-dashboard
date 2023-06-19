@@ -29,7 +29,7 @@ export default function Home() {
         <Col xs={12} md={12} lg={6}>
           <Card loading={isLoading} bordered={false}>
             <Statistic
-              title="Active Minipools"
+              title="Total Minipools"
               prefix={<ArrowUpOutlined />}
               valueStyle={{ color: "#3f8600" }}
               value={minipoolCount?.toNumber()}
