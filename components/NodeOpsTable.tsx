@@ -30,7 +30,7 @@ const App: React.FC = () => {
         <Column
           title="Node Address"
           dataIndex="0"
-          key="2"
+          key="0"
           render={(n) => {
             return <CopyableAddress address={n} />;
           }}
@@ -38,7 +38,7 @@ const App: React.FC = () => {
         <Column
           title="GGP Staked"
           dataIndex="6"
-          key="2"
+          key="1"
           render={(n) => {
             return toWei(n).toLocaleString();
           }}

@@ -25,7 +25,6 @@ export function CopyableNodeId({ nodeId }: { nodeId: string }) {
 }
 
 export function CopyableAddress({ address }: { address: string }) {
-  console.log(address, "address");
   return (
     <>
       {hashEmoji(address)}

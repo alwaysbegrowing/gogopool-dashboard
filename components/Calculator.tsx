@@ -5,12 +5,22 @@ import {
   weiValue,
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
-import { Col, Input, Row, Space, Table, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  InputNumber,
+  Row,
+  Slider,
+  Space,
+  Table,
+  Typography,
+} from "antd";
 import { BigNumber } from "ethers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
-import { parseEther, parseUnits } from "ethers/lib/utils.js";
+import { formatEther, parseEther, parseUnits } from "ethers/lib/utils.js";
 
 const { Title } = Typography;
 const INVESTOR = "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127";
@@ -35,16 +45,44 @@ export function Calculator() {
       .div(weiValue);
   };
 
-  const [avaxAmount, setAvaxAmount] = useState<BigNumber>(BigNumber.from(1000));
-  const [ggpPrice, setGgpPrice] = useState<number>(0);
+  const [avaxAmount, setAvaxAmount] = useState<BigNumber>(parseEther("1000"));
+  const [numMinipools, setNumMinipools] = useState<number>(1);
+  const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(0.1);
+  const [realGgpAmount, setRealGgpAmount] = useState<BigNumber>(
+    parseEther("0")
+  );
+  const [ggpPriceInAVAX, setGgpPriceinAvax] = useState<BigNumber>(
+    parseEther("0.17")
+  );
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
-  const { data: ggpPriceInAVAX } = useGetGGPPriceInAVAX();
+  const { data: currentGgpPrice } = useGetGGPPriceInAVAX();
 
-  if (!stakers || !minSeconds || !ggpPriceInAVAX) return null;
+  useEffect(() => {
+    if (currentGgpPrice?.price) {
+      setGgpPriceinAvax(currentGgpPrice?.price);
+    }
+  }, [currentGgpPrice?.price]);
 
-  // Node Operators
+  useEffect(() => {
+    setRealGgpAmount(
+      avaxAmount
+        .div(ggpPriceInAVAX)
+        .mul(parseEther(ggpCollatPercent.toString()))
+    );
+  }, [ggpPriceInAVAX]);
+
+  if (!stakers || !minSeconds || !currentGgpPrice) return null;
+
+  const resetValues = () => {
+    setAvaxAmount(parseEther("1000"));
+    setGgpPriceinAvax(currentGgpPrice.price);
+    setGgpCollatPercent(0.1);
+    setNumMinipools(1);
+  };
+
+  // Node Operators total eligible ggp staked
   let retailTegs = BigNumber.from(0);
   let investorTegs = BigNumber.from(0);
 
@@ -60,13 +98,14 @@ export function Calculator() {
         .mul(parseEther("1.5"))
         .div(weiValue);
 
-      const ggpAsAVAX = staker.ggpStaked
-        .mul(ggpPriceInAVAX.price)
-        .div(weiValue);
+      const ggpAsAVAX = staker.ggpStaked.mul(ggpPriceInAVAX).div(weiValue);
 
-      const effectiveGGPStaked = ggpAsAVAX.gt(max)
-        ? max.mul(weiValue).div(ggpPriceInAVAX.price)
-        : staker.ggpStaked;
+      let effectiveGGPStaked = staker.ggpStaked;
+      if (!ggpPriceInAVAX.eq(parseEther("0"))) {
+        effectiveGGPStaked = ggpAsAVAX.gt(max)
+          ? max.mul(weiValue).div(ggpPriceInAVAX)
+          : staker.ggpStaked;
+      }
 
       if (staker.stakerAddr != INVESTOR) {
         retailTegs = retailTegs.add(effectiveGGPStaked);
@@ -102,8 +141,8 @@ export function Calculator() {
       percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
     }
 
-    const inAvax = reward.mul(ggpPriceInAVAX.price).div(weiValue);
-    const inUsd = reward.mul(ggpPriceInAVAX.price).mul(15).div(weiValue);
+    const inAvax = reward.mul(ggpPriceInAVAX).div(weiValue);
+    const inUsd = reward.mul(ggpPriceInAVAX).mul(15).div(weiValue);
     return {
       ...staker,
       reward,
@@ -125,6 +164,10 @@ export function Calculator() {
   // New Node variable reward amounts
   let rewardAmounts = [
     {
+      collateralRatioString: (ggpCollatPercent * 100).toString() + "%",
+      collateralRatio: parseEther(ggpCollatPercent.toString()),
+    },
+    {
       collateralRatioString: "10%",
       collateralRatio: parseEther("0.1"),
     },
@@ -143,15 +186,15 @@ export function Calculator() {
   ];
 
   rewardAmounts = rewardAmounts.map((r) => {
-    const ggpStake = avaxAmount
-      .mul(weiValue)
-      .div(ggpPriceInAVAX.price)
-      .mul(r.collateralRatio);
+    let ggpStake = parseEther("0");
+    if (!ggpPriceInAVAX.eq(parseEther("0"))) {
+      ggpStake = avaxAmount.div(ggpPriceInAVAX).mul(r.collateralRatio);
+    }
 
     const reward = getRewardAmount(ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
 
-    const inAvax = reward.mul(ggpPriceInAVAX.price).div(weiValue);
-    const inUsd = reward.mul(ggpPriceInAVAX.price).mul(15).div(weiValue);
+    const inAvax = reward.mul(ggpPriceInAVAX).div(weiValue);
+    const inUsd = reward.mul(ggpPriceInAVAX).mul(15).div(weiValue);
     const percentStake = ggpStake.mul(weiValue).div(retailTegs);
     return {
       ...r,
@@ -169,34 +212,115 @@ export function Calculator() {
         <Col>
           <Space direction="vertical">
             <Title>Minipool Rewards Calculator</Title>
-            <Row gutter={16}>
-              {/* <Col span={20}>
-                 <Input
-                  placeholder="GGP Collateral"
-                  type="number"
-                  onChange={(e) => setGGPAmount(Number(e.target.value))}
-                /> 
-              </Col>
-              <Col>
-                <Button type="primary">Enter</Button>
-              </Col> */}
-            </Row>
           </Space>
-          <h1>protocol settings</h1>
+          <h1>Protocol Settings</h1>
+          <Button onClick={resetValues}>Reset</Button>
           <Row gutter={32}>
             <Col>
-              <div>GGP {`<>`} USD</div>
+              <div>GGP {`<>`} AVAX</div>
             </Col>
             <Col>
-              <Input type="number" value={ggpPrice} />
+              <Input
+                type="number"
+                value={+formatEther(ggpPriceInAVAX.toString())}
+                onChange={(e) => {
+                  setGgpPriceinAvax(parseEther(e.target.value || "0"));
+                }}
+              />
+            </Col>
+            <Col>
+              starting price:{" "}
+              {`${(+formatEther(currentGgpPrice.price.toString())).toFixed(4)}`}
             </Col>
           </Row>
+          <h1>Your Minipool</h1>
           <Row gutter={32}>
             <Col>
-              <div>AVAX {`<>`} USD</div>
+              <div>Number of Minipools</div>
+            </Col>
+            <Col span={3}>
+              <InputNumber
+                value={numMinipools}
+                onChange={(e) => {
+                  let num = e ? e : 1;
+                  setNumMinipools(num);
+                  setAvaxAmount(parseEther((num * 1000).toString()));
+                }}
+              />
             </Col>
             <Col>
-              <Input type="number" value={ggpPrice} />
+              <div>AVAX amount</div>
+            </Col>
+            <Col span={3}>
+              <Input
+                type="number"
+                value={+formatEther(avaxAmount)}
+                onChange={(e) => {
+                  setAvaxAmount(parseEther(e.target.value || "0"));
+                  // setGgpPriceinAvax(parseEther(e.target.value || "0"));
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <Row gutter={32}>
+                <Col span={6}>
+                  <Slider
+                    min={10}
+                    max={150}
+                    step={1}
+                    marks={{
+                      10: "10%",
+                      150: "150%",
+                    }}
+                    // defaultValue={60}
+                    value={ggpCollatPercent * 100}
+                    onChange={(e) => {
+                      setGgpCollatPercent(e / 100);
+                      setRealGgpAmount(
+                        avaxAmount
+                          .div(ggpPriceInAVAX)
+                          .mul(parseEther((e / 100).toString()))
+                      );
+                    }}
+                  />
+                </Col>
+
+                <Col span={4}>
+                  <Input
+                    value={ggpCollatPercent * 100}
+                    onChange={(e) => {
+                      setGgpCollatPercent(+e.target.value / 100);
+                      setRealGgpAmount(
+                        avaxAmount
+                          .div(ggpPriceInAVAX)
+                          .mul(parseEther((+e.target.value / 100).toString()))
+                      );
+                    }}
+                  />
+                  <div>%</div>
+                </Col>
+                <Col span={6}>
+                  <Input
+                    value={+formatEther(realGgpAmount)}
+                    type="number"
+                    onChange={(e) => {
+                      setRealGgpAmount(parseEther(e.target.value || "0"));
+                    }}
+                  />
+                  <div>GGP</div>
+                  <Button
+                    onClick={() => {
+                      setGgpCollatPercent(
+                        +formatEther(
+                          realGgpAmount.mul(ggpPriceInAVAX).div(avaxAmount)
+                        )
+                      );
+                    }}
+                  >
+                    calc
+                  </Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <RatioRewardsTable rewardAmounts={rewardAmounts} />
