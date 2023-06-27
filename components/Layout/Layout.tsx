@@ -12,7 +12,7 @@ import {
   MailOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-
+//test
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
 
@@ -29,12 +29,12 @@ const items: MenuProps["items"] = [
   },
   {
     label: "Contracts",
-    key: "/contracts",
+    key: "contracts",
     // icon: <AppstoreOutlined />,
   },
   {
     label: "Events",
-    key: "/events",
+    key: "events",
     // icon: <AppstoreOutlined />,
   },
 ];
@@ -107,7 +107,7 @@ export default function CustomLayout({
           justifyContent: "space-between",
           ...contentStyle,
         }}
-      >
+      > 
         {children}
         <CustomFooter />
       </Content>
