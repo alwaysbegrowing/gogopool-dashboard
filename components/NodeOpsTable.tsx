@@ -15,7 +15,7 @@ import { FormattedAddress } from "./FormattedAddress";
 
 const App: React.FC = () => {
   const { data, isLoading } = useStakers();
-
+  const [pageSize, setPageSize] = React.useState(5);
   if (!data) return <></>;
 
   const cleanedData = [] as any;
@@ -33,7 +33,14 @@ const App: React.FC = () => {
         scroll={{ x: true }}
         loading={isLoading}
         dataSource={cleanedData}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize,
+          pageSizeOptions: ["5", "10", "50", "500"],
+          showSizeChanger: true,
+          onShowSizeChange: (current, size) => {
+            setPageSize(size);
+          },
+        }}
       >
         <Column
           title="Node Address"

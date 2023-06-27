@@ -23,6 +23,8 @@ const nodeHexToID = (h: any) => {
 };
 
 const App: React.FC = () => {
+  const [pageSize, setPageSize] = React.useState(5);
+
   const { data: minipoolData, isLoading }: any = useContractRead({
     address: "0xc8de41c35fb389286546cf4107102a7656da7037",
     abi: minipoolManagerABI,
@@ -40,7 +42,14 @@ const App: React.FC = () => {
         bordered={false}
         loading={isLoading}
         dataSource={reversedData}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize,
+          pageSizeOptions: ["5", "10", "50", "500"],
+          showSizeChanger: true,
+          onShowSizeChange: (current, size) => {
+            setPageSize(size);
+          },
+        }}
       >
         <Column
           title="NodeID"
