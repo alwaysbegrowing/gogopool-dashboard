@@ -285,9 +285,10 @@ export function Calculator() {
                   />
                 </Col>
 
-                <Col span={4}>
+                <Col span={8}>
                   <Input
                     value={ggpCollatPercent * 100}
+                    type="number"
                     onChange={(e) => {
                       setGgpCollatPercent(+e.target.value / 100);
                       setRealGgpAmount(
