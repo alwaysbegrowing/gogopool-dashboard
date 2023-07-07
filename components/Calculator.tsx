@@ -23,6 +23,7 @@ import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther, parseUnits } from "ethers/lib/utils.js";
 import { YourMinipool } from "./YourMinipool";
 import { ProtocolSettings } from "./ProtocolSettings";
+import YourMinipoolResults from "./YourMinipoolResults";
 
 const { Title } = Typography;
 const INVESTOR = "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127";
@@ -49,7 +50,7 @@ export function Calculator() {
 
   const [avaxAmount, setAvaxAmount] = useState<BigNumber>(parseEther("1000"));
   const [numMinipools, setNumMinipools] = useState<number>(1);
-  const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(0.1);
+  const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(0.5);
   const [realGgpAmount, setRealGgpAmount] = useState<BigNumber>(
     parseEther("0")
   );
@@ -80,7 +81,7 @@ export function Calculator() {
   const resetValues = () => {
     setAvaxAmount(parseEther("1000"));
     setGgpPriceInAvax(currentGgpPrice.price);
-    setGgpCollatPercent(0.1);
+    setGgpCollatPercent(.1);
     setNumMinipools(1);
   };
 
@@ -197,8 +198,8 @@ export function Calculator() {
       <Space direction="vertical">
         <Title>Minipool Rewards Calculator</Title>
       </Space>
-      <Row gutter={64}>
-        <Col span={16}>
+      <Row gutter={32}>
+        <Col lg={12} md={12} sm={24}>
           <YourMinipool
             numMinipools={numMinipools}
             setNumMinipools={setNumMinipools}
@@ -211,12 +212,12 @@ export function Calculator() {
             ggpPriceInAvax={ggpPriceInAvax}
           />
         </Col>
-        <Col span={8}>
-          <ProtocolSettings
-            resetValues={resetValues}
-            ggpPriceInAvax={ggpPriceInAvax}
-            setGgpPriceInAvax={setGgpPriceInAvax}
-            currentGgpPrice={currentGgpPrice}
+        <Col lg={12} md={12} sm={24}>
+          <YourMinipoolResults
+            ggpCollatPercent={ggpCollatPercent}
+            realGgpAmount={realGgpAmount}
+            avaxAmount={avaxAmount}
+            numMinipools={numMinipools}
           />
         </Col>
       </Row>
