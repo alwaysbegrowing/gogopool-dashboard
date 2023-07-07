@@ -194,11 +194,11 @@ export function Calculator() {
 
   return (
     <Space direction="vertical">
-      <Row justify={"center"}>
-        <Col>
-          <Space direction="vertical">
-            <Title>Minipool Rewards Calculator</Title>
-          </Space>
+      <Space direction="vertical">
+        <Title>Minipool Rewards Calculator</Title>
+      </Space>
+      <Row gutter={64}>
+        <Col span={16}>
           <YourMinipool
             numMinipools={numMinipools}
             setNumMinipools={setNumMinipools}
@@ -210,25 +210,27 @@ export function Calculator() {
             setRealGgpAmount={setRealGgpAmount}
             ggpPriceInAvax={ggpPriceInAvax}
           />
+        </Col>
+        <Col span={8}>
           <ProtocolSettings
             resetValues={resetValues}
             ggpPriceInAvax={ggpPriceInAvax}
             setGgpPriceInAvax={setGgpPriceInAvax}
             currentGgpPrice={currentGgpPrice}
           />
-          <RatioRewardsTable rewardAmounts={rewardAmounts} />
-          <NodeOpRewardTable
-            title={"Retail Node Ops"}
-            ggpStaked={retailTegs}
-            stakers={retailStakers}
-          />
-          <NodeOpRewardTable
-            title={"Investor Node Ops"}
-            ggpStaked={investorTegs}
-            stakers={investorStakers}
-          />
         </Col>
       </Row>
+      <RatioRewardsTable rewardAmounts={rewardAmounts} />
+      <NodeOpRewardTable
+        title={"Retail Node Ops"}
+        ggpStaked={retailTegs}
+        stakers={retailStakers}
+      />
+      <NodeOpRewardTable
+        title={"Investor Node Ops"}
+        ggpStaked={investorTegs}
+        stakers={investorStakers}
+      />
     </Space>
   );
 }
