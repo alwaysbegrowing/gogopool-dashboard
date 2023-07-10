@@ -16,11 +16,11 @@ export default function YourMinipoolResults({
   numMinipools
 }: Props) {
 
-  const { Paragraph, Text } = Typography;
+  const { Paragraph, Text, Title } = Typography;
 
   return (
-    <div>
-      <h1>Results</h1>
+    <>
+      <Title level={3}>Results</Title>
       <Col span={24}>
         <Typography>
           <Paragraph>
@@ -34,6 +34,6 @@ export default function YourMinipoolResults({
           </Paragraph>
         </Typography>
       </Col>
-    </div>
+    </>
   )
 }

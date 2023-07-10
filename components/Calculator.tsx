@@ -11,8 +11,7 @@ import {
   Space,
   Typography,
 } from "antd";
-import { BigNumber } from "ethers";
-import { ChangeEvent, useEffect, useState } from "react";
+import { BigNumber } from "ethers"; import { ChangeEvent, useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
@@ -55,6 +54,12 @@ export function Calculator() {
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
   const { data: currentGgpPrice } = useGetGGPPriceInAVAX();
+
+  // This is to make everything client side render because of a hydration mismatch
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     if (currentGgpPrice?.price) {
@@ -216,42 +221,44 @@ export function Calculator() {
   });
 
   return (
-    <Space direction="vertical">
-      <Space direction="vertical">
-        <Title>Minipool Rewards Calculator</Title>
-      </Space>
-      <Row gutter={32}>
-        <Col lg={12} md={12} sm={24}>
-          <YourMinipool
-            numMinipools={numMinipools}
-            avaxAmount={avaxAmount}
-            ggpCollatPercent={ggpCollatPercent}
-            realGgpAmount={realGgpAmount}
-            handleMinipoolChange={handleMinipoolChange}
-            handlePercentChange={handlePercentChange}
-            handleGgpStake={handleGgpStake}
+    <>
+      {isClient && (
+        <Space direction="vertical">
+          <Title>Minipool Rewards Calculator</Title>
+          <Row gutter={32}>
+            <Col lg={12} md={12} sm={24}>
+              <YourMinipool
+                numMinipools={numMinipools}
+                avaxAmount={avaxAmount}
+                ggpCollatPercent={ggpCollatPercent}
+                realGgpAmount={realGgpAmount}
+                handleMinipoolChange={handleMinipoolChange}
+                handlePercentChange={handlePercentChange}
+                handleGgpStake={handleGgpStake}
+              />
+            </Col>
+            <Col lg={12} md={12} sm={24}>
+              <YourMinipoolResults
+                ggpCollatPercent={ggpCollatPercent}
+                realGgpAmount={realGgpAmount}
+                avaxAmount={avaxAmount}
+                numMinipools={numMinipools}
+              />
+            </Col>
+          </Row>
+          <RatioRewardsTable rewardAmounts={rewardAmounts} />
+          <NodeOpRewardTable
+            title={"Retail Node Ops"}
+            ggpStaked={retailTegs}
+            stakers={retailStakers}
           />
-        </Col>
-        <Col lg={12} md={12} sm={24}>
-          <YourMinipoolResults
-            ggpCollatPercent={ggpCollatPercent}
-            realGgpAmount={realGgpAmount}
-            avaxAmount={avaxAmount}
-            numMinipools={numMinipools}
+          <NodeOpRewardTable
+            title={"Investor Node Ops"}
+            ggpStaked={investorTegs}
+            stakers={investorStakers}
           />
-        </Col>
-      </Row>
-      <RatioRewardsTable rewardAmounts={rewardAmounts} />
-      <NodeOpRewardTable
-        title={"Retail Node Ops"}
-        ggpStaked={retailTegs}
-        stakers={retailStakers}
-      />
-      <NodeOpRewardTable
-        title={"Investor Node Ops"}
-        ggpStaked={investorTegs}
-        stakers={investorStakers}
-      />
-    </Space>
+        </Space>
+      )}
+    </>
   );
 }

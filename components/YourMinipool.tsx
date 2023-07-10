@@ -29,11 +29,11 @@ export function YourMinipool({
   handleGgpStake: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
 
-  const { Text } = Typography;
+  const { Text, Title } = Typography;
 
   return (
     <>
-      <h1>Example Minipool Stake</h1>
+      <Title level={3}>Your Minipool</Title>
       {/*AVAX*/}
       <Row gutter={[0, 8]} justify="center">
         <Col span={20}>
