@@ -1,5 +1,6 @@
 import {
   Col,
+  Descriptions,
   Input,
   InputNumber,
   Row,
@@ -45,10 +46,12 @@ export function YourMinipool({
           />
         </Col>
         <Col span={20}>
-          <Tooltip title="AVAX Staked / 1000 per minipool.">
+          <Tooltip title="AVAX Staked: 1000 per minipool.">
             AVAX Staked
           </Tooltip>
-          <Text>{+formatEther(avaxAmount)}</Text>
+          <Descriptions size="small" bordered>
+            <Descriptions.Item label="AVAX">{+formatEther(avaxAmount)}</Descriptions.Item>
+          </Descriptions>
         </Col>
         {/*GGP*/}
         <Col span={12}>
@@ -65,7 +68,7 @@ export function YourMinipool({
           />
         </Col>
         <Col span={20}>
-          <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP * GGP price) / (AVAX * AVAX Price)) * 100">
+          <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
             GGP Collateral Percentage
           </Tooltip>
           <InputNumber

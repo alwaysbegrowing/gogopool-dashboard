@@ -224,7 +224,7 @@ export function Calculator() {
         <Space direction="vertical">
           <Title>Minipool Rewards Calculator</Title>
           <Row gutter={32}>
-            <Col lg={12} md={12} sm={24}>
+            <Col xl={8} lg={12} md={12} sm={24}>
               <YourMinipool
                 numMinipools={numMinipools}
                 avaxAmount={avaxAmount}
@@ -235,7 +235,7 @@ export function Calculator() {
                 handleGgpStake={handleGgpStake}
               />
             </Col>
-            <Col lg={12} md={12} sm={24}>
+            <Col xl={8} lg={12} md={12} sm={24}>
               <YourMinipoolResults
                 ggpCollatPercent={ggpCollatPercent}
                 realGgpAmount={realGgpAmount}
