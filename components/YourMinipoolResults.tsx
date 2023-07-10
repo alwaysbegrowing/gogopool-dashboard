@@ -25,7 +25,7 @@ export default function YourMinipoolResults({
         <Typography>
           <Paragraph>
             Creating <Text strong>{numMinipools} Minipool(s)</Text> results in <Text strong>{formatEther(avaxAmount)} AVAX</Text> being borrowed. In order to maintain
-            a GGP Collateral Percentage of <Text strong>{ggpCollatPercent * 100}%</Text> you are required to stake <Text strong>{formatEther(realGgpAmount)} GGP</Text>.
+            a GGP Collateral Percentage of <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> you are required to stake <Text strong>{formatEther(realGgpAmount)} GGP</Text>.
 
           </Paragraph>
           <Divider />

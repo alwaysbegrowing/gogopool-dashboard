@@ -6,23 +6,17 @@ import {
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
 import {
-  Button,
   Col,
-  Input,
-  InputNumber,
   Row,
-  Slider,
   Space,
-  Table,
   Typography,
 } from "antd";
 import { BigNumber } from "ethers";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
-import { formatEther, parseEther, parseUnits } from "ethers/lib/utils.js";
+import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { YourMinipool } from "./YourMinipool";
-import { ProtocolSettings } from "./ProtocolSettings";
 import YourMinipoolResults from "./YourMinipoolResults";
 
 const { Title } = Typography;
@@ -50,9 +44,9 @@ export function Calculator() {
 
   const [avaxAmount, setAvaxAmount] = useState<BigNumber>(parseEther("1000"));
   const [numMinipools, setNumMinipools] = useState<number>(1);
-  const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(0.5);
+  const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(50);
   const [realGgpAmount, setRealGgpAmount] = useState<BigNumber>(
-    parseEther("0")
+    parseEther("420")
   );
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
@@ -72,18 +66,46 @@ export function Calculator() {
     setRealGgpAmount(
       avaxAmount
         .div(ggpPriceInAvax)
-        .mul(parseEther(ggpCollatPercent.toString()))
+        .mul(parseEther((ggpCollatPercent / 100).toString()))
     );
   }, [ggpPriceInAvax]);
 
   if (!stakers || !minSeconds || !currentGgpPrice) return null;
 
-  const resetValues = () => {
-    setAvaxAmount(parseEther("1000"));
-    setGgpPriceInAvax(currentGgpPrice.price);
-    setGgpCollatPercent(.1);
-    setNumMinipools(1);
-  };
+  function handleMinipoolChange(minipools: number | null) {
+    if (minipools) {
+      const newAvaxAmount = parseEther((minipools * 1000).toString())
+      setNumMinipools(minipools)
+      setAvaxAmount(newAvaxAmount)
+      setRealGgpAmount(
+        newAvaxAmount
+          .div(ggpPriceInAvax)
+          .mul(parseEther((ggpCollatPercent / 100).toString()))
+      )
+    }
+  }
+
+  function handlePercentChange(percent: number | null) {
+    if (percent) {
+      setGgpCollatPercent(percent);
+      setRealGgpAmount(
+        avaxAmount
+          .div(ggpPriceInAvax)
+          .mul(parseEther((percent / 100).toString()))
+      );
+    }
+  }
+
+  function handleGgpStake(e: ChangeEvent<HTMLInputElement>) {
+    const ggp = e.target.value;
+    const newGgpAmount = parseEther(ggp || "0")
+    setGgpCollatPercent(
+      +formatEther(
+        newGgpAmount.mul(ggpPriceInAvax).div(avaxAmount).mul(BigNumber.from(100))
+      )
+    );
+    setRealGgpAmount(newGgpAmount);
+  }
 
   // Node Operators total eligible ggp staked
   let retailTegs = BigNumber.from(0);
@@ -167,8 +189,8 @@ export function Calculator() {
   // New Node variable reward amounts
   let rewardAmounts = [
     {
-      collateralRatioString: (ggpCollatPercent * 100).toString() + "%",
-      collateralRatio: parseEther(ggpCollatPercent.toString()),
+      collateralRatioString: (ggpCollatPercent.toFixed(1)).toString() + "%",
+      collateralRatio: parseEther((ggpCollatPercent / 100).toFixed(5)),
     },
   ];
 
@@ -202,14 +224,12 @@ export function Calculator() {
         <Col lg={12} md={12} sm={24}>
           <YourMinipool
             numMinipools={numMinipools}
-            setNumMinipools={setNumMinipools}
             avaxAmount={avaxAmount}
-            setAvaxAmount={setAvaxAmount}
             ggpCollatPercent={ggpCollatPercent}
-            setGgpCollatPercent={setGgpCollatPercent}
             realGgpAmount={realGgpAmount}
-            setRealGgpAmount={setRealGgpAmount}
-            ggpPriceInAvax={ggpPriceInAvax}
+            handleMinipoolChange={handleMinipoolChange}
+            handlePercentChange={handlePercentChange}
+            handleGgpStake={handleGgpStake}
           />
         </Col>
         <Col lg={12} md={12} sm={24}>

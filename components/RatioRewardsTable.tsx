@@ -1,7 +1,5 @@
-import { Col, Row, Table } from "antd";
+import { Table } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
-import { BigNumber } from "ethers";
-import { CopyableAddress } from "./Copyable";
 
 export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
   const rewardsColumns = [

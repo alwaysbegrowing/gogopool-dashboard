@@ -1,39 +1,38 @@
 import {
-  Button,
   Col,
-  Divider,
   Input,
   InputNumber,
   Row,
   Slider,
-  Space,
   Tooltip,
+  Typography,
 } from "antd";
 import { BigNumber } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils.js";
-import { Dispatch, SetStateAction } from "react";
+import { formatEther } from "ethers/lib/utils.js";
+import { ChangeEvent } from "react";
 
 export function YourMinipool({
   numMinipools,
-  setNumMinipools,
   avaxAmount,
-  setAvaxAmount,
   ggpCollatPercent,
-  setGgpCollatPercent,
   realGgpAmount,
-  setRealGgpAmount,
-  ggpPriceInAvax,
+  handleMinipoolChange,
+  handlePercentChange,
+  handleGgpStake,
 }: {
   numMinipools: number;
-  setNumMinipools: Dispatch<SetStateAction<number>>;
   avaxAmount: BigNumber;
-  setAvaxAmount: Dispatch<SetStateAction<BigNumber>>;
   ggpCollatPercent: number;
-  setGgpCollatPercent: Dispatch<SetStateAction<number>>;
   realGgpAmount: BigNumber;
-  setRealGgpAmount: Dispatch<SetStateAction<BigNumber>>;
-  ggpPriceInAvax: BigNumber;
+  handleMinipoolChange: (minipools: number | null) => void;
+  handlePercentChange: (percent: number | null) => void;
+  handleGgpStake: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
+
+  const { Text } = Typography;
+
+  console.log({ ggpCollatPercent: ggpCollatPercent })
+
   return (
     <>
       <h1>Example Minipool Stake</h1>
@@ -47,27 +46,14 @@ export function YourMinipool({
             style={{ width: "100%" }}
             addonBefore="# MP"
             value={numMinipools}
-            onChange={(e) => {
-              let num = e ? e : 1;
-              setNumMinipools(num);
-              setAvaxAmount(parseEther((num * 1000).toString()));
-            }}
+            onChange={handleMinipoolChange}
           />
         </Col>
         <Col span={20}>
           <Tooltip title="AVAX Staked / 1000 per minipool.">
             AVAX Staked
           </Tooltip>
-          <Input
-            type="number"
-            disabled
-            addonBefore="AVAX"
-            value={+formatEther(avaxAmount)}
-            onChange={(e) => {
-              setAvaxAmount(parseEther(e.target.value || "0"));
-              // setGgpPriceinAvax(parseEther(e.target.value || "0"));
-            }}
-          />
+          <Text>{+formatEther(avaxAmount)}</Text>
         </Col>
         {/*GGP*/}
         <Col span={12}>
@@ -79,33 +65,20 @@ export function YourMinipool({
               10: "10%",
               150: "150%",
             }}
-            value={ggpCollatPercent * 100}
-            onChange={(e) => {
-              setGgpCollatPercent(e / 100);
-              setRealGgpAmount(
-                avaxAmount
-                  .div(ggpPriceInAvax)
-                  .mul(parseEther((e / 100).toString()))
-              );
-            }}
+            value={ggpCollatPercent}
+            onChange={handlePercentChange}
           />
         </Col>
         <Col span={20}>
           <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP * GGP price) / (AVAX * AVAX Price)) * 100">
             GGP Collateral Percentage
           </Tooltip>
-          <Input
-            value={ggpCollatPercent * 100}
+          <InputNumber
+            style={{ width: "100%" }}
+            value={+ggpCollatPercent.toFixed(1)}
             type="number"
             addonAfter={"%"}
-            onChange={(e) => {
-              setGgpCollatPercent(+e.target.value / 100);
-              setRealGgpAmount(
-                avaxAmount
-                  .div(ggpPriceInAvax)
-                  .mul(parseEther((+e.target.value / 100).toString()))
-              );
-            }}
+            onChange={handlePercentChange}
           />
         </Col>
         <Col span={20}>
@@ -115,24 +88,8 @@ export function YourMinipool({
           <Input
             value={+formatEther(realGgpAmount)}
             addonBefore={"GGP"}
-            addonAfter={
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setGgpCollatPercent(
-                    +formatEther(
-                      realGgpAmount.mul(ggpPriceInAvax).div(avaxAmount)
-                    )
-                  );
-                }}
-              >
-                Calculate
-              </div>
-            }
             type="number"
-            onChange={(e) => {
-              setRealGgpAmount(parseEther(e.target.value || "0"));
-            }}
+            onChange={handleGgpStake}
           />
         </Col >
       </Row >
