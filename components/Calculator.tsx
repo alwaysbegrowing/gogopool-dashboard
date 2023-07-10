@@ -13,9 +13,10 @@ import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
-import Checkbox, { CheckboxChangeEvent } from "antd/es/checkbox";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { ProtocolSettings } from "./ProtocolSettings";
 
-const { Title, Text } = Typography;
+const { Paragraph, Title } = Typography;
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
@@ -46,7 +47,7 @@ export function Calculator() {
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
   );
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(false);
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
@@ -121,7 +122,9 @@ export function Calculator() {
   }
 
   // Node Operators total eligible ggp staked
-  let retailTegs = checked ? BigNumber.from(realGgpAmount) : BigNumber.from("0");
+  let retailTegs = checked
+    ? BigNumber.from(realGgpAmount)
+    : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
 
   const eligibleStakers = stakers
@@ -228,14 +231,30 @@ export function Calculator() {
     };
   });
 
-
   return (
     <>
       {isClient && (
         <Space direction="vertical">
-          <Title>Minipool Rewards Calculator</Title>
+          <Row justify="space-between" gutter={32}>
+            <Col lg={16} md={20}>
+              <Title>Minipool Rewards Calculator</Title>
+              <Typography>
+                <Paragraph style={{ fontSize: 18 }}>
+                  Estimate GGP rewards you'll recieve for running a minipool
+                  under current network conditions.
+                </Paragraph>
+              </Typography>
+            </Col>
+            <Col lg={8} md={20}>
+              <ProtocolSettings
+                setGgpPriceInAvax={setGgpPriceInAvax}
+                ggpPriceInAvax={ggpPriceInAvax}
+                currentGgpPrice={currentGgpPrice}
+              />
+            </Col>
+          </Row>
           <Row gutter={32}>
-            <Col xl={8} lg={12} md={12} sm={24}>
+            <Col xl={12} lg={12} md={12} sm={24}>
               <YourMinipool
                 numMinipools={numMinipools}
                 avaxAmount={avaxAmount}
@@ -246,7 +265,7 @@ export function Calculator() {
                 handleGgpStake={handleGgpStake}
               />
             </Col>
-            <Col xl={8} lg={12} md={12} sm={24}>
+            <Col xl={10} lg={12} md={12} sm={24}>
               <YourMinipoolResults
                 ggpCollatPercent={ggpCollatPercent}
                 realGgpAmount={realGgpAmount}

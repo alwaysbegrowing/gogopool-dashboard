@@ -1,16 +1,13 @@
-import { Button, Col, Input, InputNumber, Row, Slider } from "antd";
+import { Col, Input, Row, Descriptions, Typography } from "antd";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
-import { Dispatch, MouseEventHandler, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 export function ProtocolSettings({
-  resetValues,
   setGgpPriceInAvax,
   ggpPriceInAvax,
   currentGgpPrice,
 }: {
-  resetValues: MouseEventHandler<HTMLAnchorElement> &
-    MouseEventHandler<HTMLButtonElement>;
   ggpPriceInAvax: BigNumber;
   setGgpPriceInAvax: Dispatch<SetStateAction<BigNumber>>;
   currentGgpPrice: {
@@ -18,28 +15,29 @@ export function ProtocolSettings({
     timestamp: BigNumber;
   };
 }) {
+  const { Title, Paragraph } = Typography;
   return (
-    <div>
-      <h1>Protocol Settings</h1>
-      <Button onClick={resetValues}>Reset</Button>
-      <Row gutter={32}>
-        <Col>
-          <div>GGP {`<>`} AVAX</div>
-        </Col>
-        <Col>
+    <>
+      <Title level={4}>Manually set the ratio of GGP to AVAX</Title>
+      <Row gutter={[32, 16]} align="middle" justify="start">
+        <Col span={20}>
           <Input
+            addonBefore="GGP / AVAX"
             type="number"
-            value={+formatEther(ggpPriceInAvax.toString())}
+            value={(+formatEther(ggpPriceInAvax.toString())).toFixed(5)}
             onChange={(e) => {
               setGgpPriceInAvax(parseEther(e.target.value || "0"));
             }}
           />
         </Col>
-        <Col>
-          starting price:{" "}
-          {`${(+formatEther(currentGgpPrice.price.toString())).toFixed(4)}`}
+        <Col span={20}>
+          <Descriptions size="small" bordered>
+            <Descriptions.Item label="Starting Price">
+              {`${(+formatEther(currentGgpPrice.price.toString())).toFixed(5)}`}
+            </Descriptions.Item>
+          </Descriptions>
         </Col>
       </Row>
-    </div>
+    </>
   );
 }

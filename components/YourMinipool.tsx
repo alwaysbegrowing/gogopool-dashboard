@@ -1,6 +1,7 @@
 import {
   Col,
   Descriptions,
+  Divider,
   Input,
   InputNumber,
   Row,
@@ -35,9 +36,11 @@ export function YourMinipool({
     <>
       <Title level={3}>Your Minipool</Title>
       {/*AVAX*/}
-      <Row gutter={[0, 8]} justify="center">
-        <Col span={20}>
-          <Tooltip title="Number of Minipools"><Text strong>Number of Minipools</Text></Tooltip>
+      <Row gutter={[0, 8]} justify="start">
+        <Col span={16}>
+          <Tooltip title="Number of Minipools">
+            <Text strong>Number of Minipools</Text>
+          </Tooltip>
           <InputNumber
             style={{ width: "100%" }}
             addonBefore="# MP"
@@ -45,16 +48,33 @@ export function YourMinipool({
             onChange={handleMinipoolChange}
           />
         </Col>
-        <Col span={20}>
+        <Col span={16}>
           <Tooltip title="AVAX Staked: 1000 per minipool.">
             <Text strong>AVAX Staked</Text>
           </Tooltip>
           <Descriptions size="small" bordered>
-            <Descriptions.Item label="AVAX">{+formatEther(avaxAmount)}</Descriptions.Item>
+            <Descriptions.Item label="AVAX">
+              {+formatEther(avaxAmount)}
+            </Descriptions.Item>
           </Descriptions>
         </Col>
+        <Col span={16}>
+          <Divider />
+        </Col>
         {/*GGP*/}
-        <Col span={12}>
+        <Col span={16}>
+          <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
+            <Text strong>GGP Collateral Percentage</Text>
+          </Tooltip>
+          <InputNumber
+            style={{ width: "100%" }}
+            value={+ggpCollatPercent.toFixed(1)}
+            type="number"
+            addonAfter={"%"}
+            onChange={handlePercentChange}
+          />
+        </Col>
+        <Col span={16}>
           <Slider
             min={10}
             max={150}
@@ -67,19 +87,7 @@ export function YourMinipool({
             onChange={handlePercentChange}
           />
         </Col>
-        <Col span={20}>
-          <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
-            <Text strong>GGP Collateral Percentage</Text>
-          </Tooltip>
-          <InputNumber
-            style={{ width: "100%" }}
-            value={+ggpCollatPercent.toFixed(1)}
-            type="number"
-            addonAfter={"%"}
-            onChange={handlePercentChange}
-          />
-        </Col>
-        <Col span={20}>
+        <Col span={16}>
           <Tooltip title="GGP stake needed to reach collateral percentage">
             <Text strong>GGP Stake</Text>
           </Tooltip>
