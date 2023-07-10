@@ -1,7 +1,8 @@
-import { Table } from "antd";
+import { Table, Typography } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
 
 export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
+  const { Title } = Typography;
   const rewardsColumns = [
     {
       title: "GGP Collateralization",
@@ -52,8 +53,8 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
 
   return (
     <>
-      <h2>Rewards for a New Minipool</h2>
-      <Table columns={rewardsColumns} dataSource={rewardAmounts} />
+      <Title level={2}>Rewards for a New Minipool</Title>
+      <Table pagination={false} columns={rewardsColumns} dataSource={rewardAmounts} />
     </>
   );
 }

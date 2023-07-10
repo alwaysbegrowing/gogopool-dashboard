@@ -37,7 +37,7 @@ export function YourMinipool({
       {/*AVAX*/}
       <Row gutter={[0, 8]} justify="center">
         <Col span={20}>
-          <Tooltip title="Number of Minipools">Number of Minipools</Tooltip>
+          <Tooltip title="Number of Minipools"><Text strong>Number of Minipools</Text></Tooltip>
           <InputNumber
             style={{ width: "100%" }}
             addonBefore="# MP"
@@ -47,7 +47,7 @@ export function YourMinipool({
         </Col>
         <Col span={20}>
           <Tooltip title="AVAX Staked: 1000 per minipool.">
-            AVAX Staked
+            <Text strong>AVAX Staked</Text>
           </Tooltip>
           <Descriptions size="small" bordered>
             <Descriptions.Item label="AVAX">{+formatEther(avaxAmount)}</Descriptions.Item>
@@ -69,7 +69,7 @@ export function YourMinipool({
         </Col>
         <Col span={20}>
           <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
-            GGP Collateral Percentage
+            <Text strong>GGP Collateral Percentage</Text>
           </Tooltip>
           <InputNumber
             style={{ width: "100%" }}
@@ -81,7 +81,7 @@ export function YourMinipool({
         </Col>
         <Col span={20}>
           <Tooltip title="GGP stake needed to reach collateral percentage">
-            GGP Stake
+            <Text strong>GGP Stake</Text>
           </Tooltip>
           <Input
             value={+formatEther(realGgpAmount)}

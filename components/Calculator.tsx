@@ -13,8 +13,9 @@ import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
+import Checkbox, { CheckboxChangeEvent } from "antd/es/checkbox";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
@@ -45,6 +46,7 @@ export function Calculator() {
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
   );
+  const [checked, setChecked] = useState(false)
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
@@ -110,8 +112,16 @@ export function Calculator() {
     setRealGgpAmount(newGgpAmount);
   }
 
+  function handleCheck(e: CheckboxChangeEvent) {
+    if (e.target.checked) {
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  }
+
   // Node Operators total eligible ggp staked
-  let retailTegs = BigNumber.from(0);
+  let retailTegs = checked ? BigNumber.from(realGgpAmount) : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
 
   const eligibleStakers = stakers
@@ -218,6 +228,7 @@ export function Calculator() {
     };
   });
 
+
   return (
     <>
       {isClient && (
@@ -246,11 +257,13 @@ export function Calculator() {
           </Row>
           <RatioRewardsTable rewardAmounts={rewardAmounts} />
           <NodeOpRewardTable
+            handleCheck={handleCheck}
             title={"Retail Node Ops"}
             ggpStaked={retailTegs}
             stakers={retailStakers}
           />
           <NodeOpRewardTable
+            handleCheck={handleCheck}
             title={"Investor Node Ops"}
             ggpStaked={investorTegs}
             stakers={investorStakers}

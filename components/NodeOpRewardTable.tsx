@@ -1,17 +1,22 @@
-import { Col, Row, Table } from "antd";
+import { Typography, Col, Row, Table } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
 import { BigNumber } from "ethers";
 import { CopyableAddress } from "./Copyable";
+import Checkbox, { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export function NodeOpRewardTable({
   title,
   ggpStaked,
   stakers,
+  handleCheck,
 }: {
-  title: String;
+  title: "Retail Node Ops" | "Investor Node Ops";
   ggpStaked: BigNumber;
   stakers: any;
+  handleCheck: (e: CheckboxChangeEvent) => void;
 }) {
+
+  const { Title, Text } = Typography;
   const stakerColumns = [
     {
       title: "Staker Addr",
@@ -71,15 +76,22 @@ export function NodeOpRewardTable({
 
   return (
     <>
-      <Row justify="center" align="middle" gutter={32}>
+      <Row justify={"start"} align="middle" gutter={32}>
         <Col>
-          <h2>{`${title}`}</h2>
+          <Title level={2}>{`${title}`}</Title>
         </Col>
         <Col>
-          <h3>
+          <Title level={3}>
             GGP Staked: {`${commify((+formatEther(ggpStaked)).toFixed(2))}`}
-          </h3>
+          </Title>
         </Col>
+      </Row>
+      <Row align={'middle'}>
+        {title === "Retail Node Ops" && (
+          <Checkbox onChange={(e) => handleCheck(e)}>
+            <Text strong style={{ fontSize: 16 }}>Include your minipool</Text>
+          </Checkbox>
+        )}
       </Row>
       <Table columns={stakerColumns} dataSource={stakers} />
     </>
