@@ -6,12 +6,12 @@ import { CSSProperties } from "react";
 import { GithubOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+// import Image from "next/image";
+// import {
+//   AppstoreOutlined,
+//   MailOutlined,
+//   SettingOutlined,
+// } from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -52,7 +52,6 @@ export default function CustomLayout({
   const [current, setCurrent] = useState("mail");
   const router = useRouter();
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
     router.push(e.key);
   };

@@ -31,8 +31,6 @@ export function YourMinipool({
 
   const { Text } = Typography;
 
-  console.log({ ggpCollatPercent: ggpCollatPercent })
-
   return (
     <>
       <h1>Example Minipool Stake</h1>
