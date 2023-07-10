@@ -52,7 +52,7 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
 
   return (
     <>
-      <h2>Rewards for a new minipool</h2>
+      <h2>Rewards for a New Minipool</h2>
       <Table columns={rewardsColumns} dataSource={rewardAmounts} />
     </>
   );
