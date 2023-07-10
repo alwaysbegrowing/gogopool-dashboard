@@ -28,7 +28,6 @@ export function YourMinipool({
   handlePercentChange: (percent: number | null) => void;
   handleGgpStake: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
-
   const { Text, Title } = Typography;
 
   return (
@@ -37,9 +36,7 @@ export function YourMinipool({
       {/*AVAX*/}
       <Row gutter={[0, 8]} justify="center">
         <Col span={20}>
-          <Tooltip title="Number of Minipools">
-            Number of Minipools
-          </Tooltip>
+          <Tooltip title="Number of Minipools">Number of Minipools</Tooltip>
           <InputNumber
             style={{ width: "100%" }}
             addonBefore="# MP"
@@ -89,8 +86,8 @@ export function YourMinipool({
             type="number"
             onChange={handleGgpStake}
           />
-        </Col >
-      </Row >
+        </Col>
+      </Row>
     </>
   );
 }

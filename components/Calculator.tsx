@@ -5,13 +5,9 @@ import {
   weiValue,
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
-import {
-  Col,
-  Row,
-  Space,
-  Typography,
-} from "antd";
-import { BigNumber } from "ethers"; import { ChangeEvent, useEffect, useState } from "react";
+import { Col, Row, Space, Typography } from "antd";
+import { BigNumber } from "ethers";
+import { ChangeEvent, useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
@@ -19,7 +15,6 @@ import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
 
 const { Title } = Typography;
-const INVESTOR = "0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127";
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
@@ -56,10 +51,10 @@ export function Calculator() {
   const { data: currentGgpPrice } = useGetGGPPriceInAVAX();
 
   // This is to make everything client side render because of a hydration mismatch
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (currentGgpPrice?.price) {
@@ -79,14 +74,14 @@ export function Calculator() {
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
-      const newAvaxAmount = parseEther((minipools * 1000).toString())
-      setNumMinipools(minipools)
-      setAvaxAmount(newAvaxAmount)
+      const newAvaxAmount = parseEther((minipools * 1000).toString());
+      setNumMinipools(minipools);
+      setAvaxAmount(newAvaxAmount);
       setRealGgpAmount(
         newAvaxAmount
           .div(ggpPriceInAvax)
           .mul(parseEther((ggpCollatPercent / 100).toString()))
-      )
+      );
     }
   }
 
@@ -103,10 +98,13 @@ export function Calculator() {
 
   function handleGgpStake(e: ChangeEvent<HTMLInputElement>) {
     const ggp = e.target.value;
-    const newGgpAmount = parseEther(ggp || "0")
+    const newGgpAmount = parseEther(ggp || "0");
     setGgpCollatPercent(
       +formatEther(
-        newGgpAmount.mul(ggpPriceInAvax).div(avaxAmount).mul(BigNumber.from(100))
+        newGgpAmount
+          .mul(ggpPriceInAvax)
+          .div(avaxAmount)
+          .mul(BigNumber.from(100))
       )
     );
     setRealGgpAmount(newGgpAmount);
@@ -137,7 +135,7 @@ export function Calculator() {
           : staker.ggpStaked;
       }
 
-      if (staker.stakerAddr != INVESTOR) {
+      if (!INVESTOR_LIST.includes(staker.stakerAddr)) {
         retailTegs = retailTegs.add(effectiveGGPStaked);
       } else {
         investorTegs = investorTegs.add(effectiveGGPStaked);
@@ -194,7 +192,7 @@ export function Calculator() {
   // New Node variable reward amounts
   let rewardAmounts = [
     {
-      collateralRatioString: (ggpCollatPercent.toFixed(1)).toString() + "%",
+      collateralRatioString: ggpCollatPercent.toFixed(1).toString() + "%",
       collateralRatio: parseEther((ggpCollatPercent / 100).toFixed(5)),
     },
   ];
