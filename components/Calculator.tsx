@@ -5,7 +5,7 @@ import {
   weiValue,
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
-import { Col, Row, Space, Typography } from "antd";
+import { Checkbox, Col, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
@@ -13,11 +13,32 @@ import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 const { Title } = Typography;
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
+
+interface Staker {
+  avaxAssigned: BigNumber;
+  avaxStaked: BigNumber;
+  avaxValidating: BigNumber;
+  avaxValidatingHighWater: BigNumber;
+  collateralRatio: BigNumber;
+  effectiveGgpStaked: BigNumber;
+  ggpLockedUntil: BigNumber;
+  ggpRewards: BigNumber;
+  ggpStake: BigNumber;
+  ggpStaked: BigNumber;
+  inAvax: BigNumber;
+  inUsd: BigNumber;
+  lastRewardsCycleCompleted: BigNumber;
+  percentStake: BigNumber;
+  reward: BigNumber;
+  rewardsStartTime: BigNumber;
+  stakerAddr: `0x${string}`;
+}
 
 export function Calculator() {
   const isInvestorWallet = (staker: any) => {
@@ -28,7 +49,10 @@ export function Calculator() {
     ggpStake: BigNumber,
     totalGGPStake: BigNumber,
     rewardAmount: BigNumber
-  ) => {
+  ): BigNumber => {
+    if (totalGGPStake.eq(BigNumber.from(0))) {
+      return BigNumber.from(0);
+    }
     return ggpStake
       .mul(weiValue)
       .div(totalGGPStake)
@@ -45,6 +69,12 @@ export function Calculator() {
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
   );
+  const [retailTegs, setRetailTegs] = useState<BigNumber>(BigNumber.from(0));
+  const [investorTegs, setInvestorTegs] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
+  const [retailStakers, setRetailStakers] = useState<Staker[]>();
+  const [investorStakers, setInvestorStakers] = useState<Staker[]>();
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
@@ -110,86 +140,114 @@ export function Calculator() {
     setRealGgpAmount(newGgpAmount);
   }
 
-  // Node Operators total eligible ggp staked
-  let retailTegs = BigNumber.from(0);
-  let investorTegs = BigNumber.from(0);
-
-  const eligibleStakers = stakers
-    .filter((staker) => {
-      return (
-        toWei(staker.avaxValidatingHighWater) && staker.rewardsStartTime.gt(0)
-      );
-    })
-    .map((staker) => {
-      // calculate effective ggp stake and total eligible ggp staked
-      const max = staker.avaxValidatingHighWater
-        .mul(parseEther("1.5"))
-        .div(weiValue);
-
-      const ggpAsAVAX = staker.ggpStaked.mul(ggpPriceInAvax).div(weiValue);
-
-      let effectiveGGPStaked = staker.ggpStaked;
-      if (!ggpPriceInAvax.eq(parseEther("0"))) {
-        effectiveGGPStaked = ggpAsAVAX.gt(max)
-          ? max.mul(weiValue).div(ggpPriceInAvax)
-          : staker.ggpStaked;
-      }
-
-      if (!INVESTOR_LIST.includes(staker.stakerAddr)) {
-        retailTegs = retailTegs.add(effectiveGGPStaked);
-      } else {
-        investorTegs = investorTegs.add(effectiveGGPStaked);
-      }
-
-      const collateralRatio = ggpAsAVAX
-        .mul(weiValue)
-        .div(staker.avaxValidatingHighWater);
-
-      return { ...staker, effectiveGGPStaked, collateralRatio };
-    })
-    .sort((a, b) => toWei(b.effectiveGGPStaked) - toWei(a.effectiveGGPStaked));
-
-  // calculations that depend on TotalEligibleGGPStaked (tegs)
-  let fullStakers = eligibleStakers.map((staker) => {
-    let reward;
-    let percentStake;
-    if (isInvestorWallet(staker)) {
-      reward = getRewardAmount(
-        staker.effectiveGGPStaked,
-        investorTegs,
-        INVESTOR_REWARD_AMOUNT
-      );
-      percentStake = staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
+  function handleCheckboxChange(e: CheckboxChangeEvent) {
+    if (e.target.checked) {
+      setRetailTegs(retailTegs.add(realGgpAmount));
     } else {
-      reward = getRewardAmount(
-        staker.effectiveGGPStaked,
-        retailTegs,
-        RETAIL_REWARD_AMOUNT
-      );
-      percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
+      setRetailTegs(retailTegs.sub(realGgpAmount));
+    }
+  }
+
+  function calculateEffectiveGgpStaked(staker: any): {
+    effectiveGgpStaked: BigNumber;
+    ggpAsAvax: BigNumber;
+  } {
+    const max = staker.avaxValidatingHighWater
+      .mul(parseEther("1.5"))
+      .div(weiValue);
+
+    const ggpAsAvax = staker.ggpStaked.mul(ggpPriceInAvax).div(weiValue);
+
+    let effectiveGgpStaked = staker.ggpStaked;
+    if (!ggpPriceInAvax.eq(parseEther("0"))) {
+      effectiveGgpStaked = ggpAsAvax.gt(max)
+        ? max.mul(weiValue).div(ggpPriceInAvax)
+        : staker.ggpStaked;
     }
 
-    const inAvax = reward.mul(ggpPriceInAvax).div(weiValue);
-    const inUsd = reward.mul(ggpPriceInAvax).mul(15).div(weiValue);
-    return {
-      ...staker,
-      reward,
-      ggpStake: staker.effectiveGGPStaked,
-      inAvax,
-      inUsd,
-      percentStake,
-    };
-  });
+    return { effectiveGgpStaked, ggpAsAvax };
+  }
 
-  const retailStakers = fullStakers.filter(
-    (staker) => !isInvestorWallet(staker)
-  );
+  useEffect(() => {
+    let tempRetailTegs = BigNumber.from(0);
+    let tempInvestorTegs = BigNumber.from(0);
 
-  const investorStakers = fullStakers.filter((staker) =>
-    isInvestorWallet(staker)
-  );
+    const tempEligibleStakers = stakers
+      .filter((staker) => {
+        return (
+          toWei(staker.avaxValidatingHighWater) && staker.rewardsStartTime.gt(0)
+        );
+      })
+      .map((staker) => {
+        const { effectiveGgpStaked, ggpAsAvax } =
+          calculateEffectiveGgpStaked(staker);
 
-  // New Node variable reward amounts
+        if (!INVESTOR_LIST.includes(staker.stakerAddr)) {
+          tempRetailTegs = tempRetailTegs.add(effectiveGgpStaked);
+        } else {
+          tempInvestorTegs = tempInvestorTegs.add(effectiveGgpStaked);
+        }
+
+        const collateralRatio = ggpAsAvax
+          .mul(weiValue)
+          .div(staker.avaxValidatingHighWater);
+
+        return { ...staker, effectiveGgpStaked, collateralRatio };
+      })
+      .sort(
+        (a, b) => toWei(b.effectiveGgpStaked) - toWei(a.effectiveGgpStaked)
+      );
+
+    let fullStakers = tempEligibleStakers.map((staker) => {
+      let reward: BigNumber;
+      let percentStake: BigNumber;
+      if (isInvestorWallet(staker)) {
+        reward = getRewardAmount(
+          staker.effectiveGgpStaked,
+          investorTegs,
+          INVESTOR_REWARD_AMOUNT
+        );
+        percentStake = investorTegs.eq(BigNumber.from(0))
+          ? BigNumber.from(0)
+          : staker.effectiveGgpStaked.mul(weiValue).div(investorTegs);
+      } else {
+        reward = getRewardAmount(
+          staker.effectiveGgpStaked,
+          retailTegs,
+          RETAIL_REWARD_AMOUNT
+        );
+        percentStake = retailTegs.eq(BigNumber.from(0))
+          ? BigNumber.from(0)
+          : staker.effectiveGgpStaked.mul(weiValue).div(retailTegs);
+      }
+
+      const inAvax = reward.mul(ggpPriceInAvax).div(weiValue);
+      const inUsd = reward.mul(ggpPriceInAvax).mul(15).div(weiValue);
+      const ggpStake: BigNumber = staker.effectiveGgpStaked;
+      return {
+        ...staker,
+        reward,
+        ggpStake,
+        inAvax,
+        inUsd,
+        percentStake,
+      };
+    });
+
+    const tempRetailStakers = fullStakers.filter(
+      (staker) => !isInvestorWallet(staker)
+    );
+
+    const tempInvestorStakers = fullStakers.filter((staker: Staker) => {
+      isInvestorWallet(staker);
+    });
+
+    setRetailTegs(tempRetailTegs);
+    setInvestorTegs(tempInvestorTegs);
+    setRetailStakers(tempRetailStakers);
+    setInvestorStakers(tempInvestorStakers);
+  }, [stakers, retailTegs]);
+
   let rewardAmounts = [
     {
       collateralRatioString: ggpCollatPercent.toFixed(1).toString() + "%",
@@ -207,7 +265,9 @@ export function Calculator() {
 
     const inAvax = reward.mul(ggpPriceInAvax).div(weiValue);
     const inUsd = reward.mul(ggpPriceInAvax).mul(15).div(weiValue);
-    const percentStake = ggpStake.mul(weiValue).div(retailTegs);
+    const percentStake = retailTegs.eq(BigNumber.from(0))
+      ? BigNumber.from(0)
+      : ggpStake.mul(weiValue).div(retailTegs);
     return {
       ...r,
       reward,
@@ -245,6 +305,7 @@ export function Calculator() {
             </Col>
           </Row>
           <RatioRewardsTable rewardAmounts={rewardAmounts} />
+          <Checkbox onChange={handleCheckboxChange} />
           <NodeOpRewardTable
             title={"Retail Node Ops"}
             ggpStaked={retailTegs}
