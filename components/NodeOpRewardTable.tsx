@@ -1,8 +1,8 @@
-import { Typography, Col, Row, Table } from "antd";
+import { Checkbox, Typography, Col, Row, Table } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
 import { BigNumber } from "ethers";
 import { CopyableAddress } from "./Copyable";
-import Checkbox, { CheckboxChangeEvent } from "antd/es/checkbox";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 export function NodeOpRewardTable({
   title,
