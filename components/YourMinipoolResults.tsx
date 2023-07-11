@@ -23,6 +23,8 @@ export default function YourMinipoolResults({
       <Col span={24}>
         <Typography>
           <Paragraph>
+            <Text style={{ fontSize: 16 }} strong>Calculator Results</Text>
+            <br></br>
             Creating <Text strong>{numMinipools} Minipool(s)</Text> results in{" "}
             <Text strong>{formatEther(avaxAmount)} AVAX</Text> being borrowed.
             For a GGP Collateral Percentage of{" "}
@@ -31,23 +33,28 @@ export default function YourMinipoolResults({
           </Paragraph>
           <Divider />
           <Paragraph>
-            <Text strong>Rewards for a New Minipool</Text>
+            <Text style={{ fontSize: 16 }} strong>GGP vs Normal</Text>
             <br></br>
-            This table shows extra information about{" "}
-            <Text strong>your rewards</Text> as input into the calculator. It
-            compares your newly created minipool with all of the other minipools
-            on the network.
+            A Gogo Pool minipool will earn you <Text strong>Some amount of % more revenue</Text> vs solo staking :0
           </Paragraph>
           <Divider />
           <Paragraph>
-            <Text strong>Retail Node Ops | Investor Node Ops</Text>
+            <Text style={{ fontSize: 16 }} strong>Normal Node Operator Revenue</Text>
             <br></br>
-            These tables show all of the{" "}
-            <Text strong>Retail Staker addresses</Text> and{" "}
-            <Text strong>Investor Staker Addresses</Text> and their effective
-            GGP staked. It breaks down all rewards on the network in real time
-            and gives information on rewards. Investor rewards are capped at 10%
-            regardless of number of minipools or GGP staked.
+            <Text strong>{numMinipools} Validator(s)</Text> will yeild {" "}
+            <Text strong>some amount of dollars per annum</Text> which gives you an APY of {" "}
+            <Text strong>some APY</Text> and a return on investment of {" "}
+            <Text strong>some ROI</Text>.
+          </Paragraph>
+          <Divider />
+          <Paragraph>
+            <Text style={{ fontSize: 16 }} strong>GoGo Pool Operator Revenue</Text>
+            <br></br>
+            <Text strong>{numMinipools} Minipool(s)</Text> at a GGP Collateral Percentage of {" "}
+            <Text strong>{ggpCollatPercent.toFixed(1)} %</Text> will yeild {" "}
+            <Text strong>some amount of dollars per annum</Text> which gives you an APY of {" "}
+            <Text strong>some APY</Text> and a return on investment (ROI) of {" "}
+            <Text strong>some ROI</Text>.
           </Paragraph>
         </Typography>
       </Col>

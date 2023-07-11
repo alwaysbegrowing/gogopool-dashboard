@@ -5,9 +5,9 @@ import {
   weiValue,
 } from "@/hooks/mounted";
 import { useStakers } from "@/hooks/mounted";
-import { Col, Row, Space, Typography } from "antd";
+import { Col, Divider, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
@@ -47,7 +47,7 @@ export function Calculator() {
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
   );
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
@@ -121,9 +121,10 @@ export function Calculator() {
     }
   }
 
+  console.log({ realGgpAmount: realGgpAmount.toString(), checked });
   // Node Operators total eligible ggp staked
   let retailTegs = checked
-    ? BigNumber.from(realGgpAmount)
+    ? realGgpAmount
     : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
 
@@ -274,16 +275,23 @@ export function Calculator() {
               />
             </Col>
           </Row>
+          <Divider />
           <RatioRewardsTable rewardAmounts={rewardAmounts} />
+          <Divider />
           <NodeOpRewardTable
             handleCheck={handleCheck}
+            checked={checked}
             title={"Retail Node Ops"}
+            details={"This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."}
             ggpStaked={retailTegs}
             stakers={retailStakers}
           />
+          <Divider />
           <NodeOpRewardTable
             handleCheck={handleCheck}
+            checked={checked}
             title={"Investor Node Ops"}
+            details={"This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."}
             ggpStaked={investorTegs}
             stakers={investorStakers}
           />

@@ -1,22 +1,29 @@
-import { Checkbox, Typography, Col, Row, Table } from "antd";
+import { Checkbox, Typography, Col, Row, Table, Divider, Space } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
 import { BigNumber } from "ethers";
 import { CopyableAddress } from "./Copyable";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { useState } from "react";
 
 export function NodeOpRewardTable({
   title,
   ggpStaked,
   stakers,
   handleCheck,
+  details,
+  checked,
 }: {
   title: "Retail Node Ops" | "Investor Node Ops";
+  details: string,
   ggpStaked: BigNumber;
   stakers: any;
+  checked: boolean
   handleCheck: (e: CheckboxChangeEvent) => void;
 }) {
 
-  const { Title, Text } = Typography;
+  const [show, setShow] = useState(false)
+
+  const { Title, Text, Paragraph } = Typography;
   const stakerColumns = [
     {
       title: "Staker Addr",
@@ -77,19 +84,26 @@ export function NodeOpRewardTable({
   return (
     <>
       <Row justify={"start"} align="middle" gutter={32}>
-        <Col>
+        <Col lg={8} md={10} sm={12}>
           <Title level={2}>{`${title}`}</Title>
         </Col>
-        <Col>
+        <Col lg={8} md={10} sm={12}>
           <Title level={3}>
             GGP Staked: {`${commify((+formatEther(ggpStaked)).toFixed(2))}`}
           </Title>
         </Col>
+        <Col lg={14} sm={20}>
+          <Paragraph style={{ cursor: "pointer" }} onClick={() => setShow(!show)}>
+            {show
+              ? (<Text strong>{details}</Text>)
+              : (<Text strong>Show details</Text>)}
+          </Paragraph>
+        </Col>
       </Row>
       <Row align={'middle'}>
         {title === "Retail Node Ops" && (
-          <Checkbox onChange={(e) => handleCheck(e)}>
-            <Text strong style={{ fontSize: 16 }}>Include your minipool</Text>
+          <Checkbox checked={checked} style={{ paddingBottom: 16 }} onChange={(e) => handleCheck(e)}>
+            <Text strong style={{ fontSize: 18 }}>Include your minipool</Text>
           </Checkbox>
         )}
       </Row>

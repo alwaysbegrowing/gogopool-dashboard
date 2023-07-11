@@ -18,11 +18,11 @@ export function ProtocolSettings({
   const { Title, Paragraph } = Typography;
   return (
     <>
-      <Title level={4}>Manually set the ratio of GGP to AVAX</Title>
+      <Title level={4}>Manually Adjust GGP Price</Title>
       <Row gutter={[32, 16]} align="middle" justify="start">
         <Col span={20}>
           <Input
-            addonBefore="GGP / AVAX"
+            addonBefore="Adjusted Price ($)"
             type="number"
             value={(+formatEther(ggpPriceInAvax.toString())).toFixed(5)}
             onChange={(e) => {
@@ -32,7 +32,7 @@ export function ProtocolSettings({
         </Col>
         <Col span={20}>
           <Descriptions size="small" bordered>
-            <Descriptions.Item label="Starting Price">
+            <Descriptions.Item label="Current Price ($)">
               {`${(+formatEther(currentGgpPrice.price.toString())).toFixed(5)}`}
             </Descriptions.Item>
           </Descriptions>
