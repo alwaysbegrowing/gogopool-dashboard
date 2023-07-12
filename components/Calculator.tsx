@@ -7,7 +7,7 @@ import {
 import { useStakers } from "@/hooks/mounted";
 import { Col, Divider, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";

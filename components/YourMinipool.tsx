@@ -1,3 +1,4 @@
+import { debounce } from "@/helpers/debounce";
 import {
   Col,
   Descriptions,
@@ -78,13 +79,13 @@ export function YourMinipool({
           <Slider
             min={10}
             max={150}
+            defaultValue={50}
             step={1}
             marks={{
               10: "10%",
               150: "150%",
             }}
-            value={ggpCollatPercent}
-            onChange={handlePercentChange}
+            onChange={debounce(handlePercentChange, 500)}
           />
         </Col>
         <Col span={16}>
