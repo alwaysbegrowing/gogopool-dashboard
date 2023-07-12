@@ -85,7 +85,7 @@ export function YourMinipool({
               10: "10%",
               150: "150%",
             }}
-            onChange={debounce(handlePercentChange, 500)}
+            onChange={debounce(handlePercentChange, 300)}
           />
         </Col>
         <Col span={16}>
