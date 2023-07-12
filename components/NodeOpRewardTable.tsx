@@ -65,18 +65,18 @@ export function NodeOpRewardTable({
     },
     {
       title: "Reward amount in AVAX",
-      dataIndex: "inAvax",
-      key: "inAvax",
-      render: (inAvax: string) => (
-        <>{`${commify((+formatEther(inAvax)).toFixed(2))}`}</>
+      dataIndex: "avaxReward",
+      key: "avaxReward",
+      render: (avaxReward: string) => (
+        <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>
       ),
     },
     {
       title: "Reward amount in USD",
-      dataIndex: "inUsd",
-      key: "inUsd",
-      render: (inUsd: string) => (
-        <>{`$${commify((+formatEther(inUsd)).toFixed(2))}`}</>
+      dataIndex: "usdReward",
+      key: "usdReward",
+      render: (usdReward: string) => (
+        <>{`$${commify((+formatEther(usdReward)).toFixed(2))}`}</>
       ),
     },
   ];

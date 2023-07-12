@@ -44,7 +44,7 @@ export function Calculator() {
   const [numMinipools, setNumMinipools] = useState<number>(1);
   const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(50);
   const [realGgpAmount, setRealGgpAmount] = useState<BigNumber>(
-    parseEther("420")
+    parseEther("0")
   );
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
@@ -56,14 +56,13 @@ export function Calculator() {
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
-  const { data: currentGgpPrice } = useGetGGPPriceInAVAX();
-
-  const { isLoading, error, data, isFetching } = useQuery({
+  const { data: currentGgpPriceInAvax } = useGetGGPPriceInAVAX();
+  const { data: avaxPriceInUsd, isLoading, error, isFetching } = useQuery<BigNumber>({
     queryKey: ["avax_price"],
     queryFn: () =>
       axios
         .get("https://www.jsonbateman.com/avax_price")
-        .then((res) => res.data),
+        .then((res) => parseEther(res.data.price.toString()))
   });
 
   // This is to make everything client side render because of a hydration mismatch
@@ -73,30 +72,25 @@ export function Calculator() {
   }, []);
 
   useEffect(() => {
-    if (currentGgpPrice?.price) {
-      setGgpPriceInAvax(currentGgpPrice?.price);
+    if (currentGgpPriceInAvax?.price && avaxPriceInUsd) {
+      setGgpPriceInAvax(currentGgpPriceInAvax?.price);
+      setGgpPriceInUsd(currentGgpPriceInAvax?.price.mul(avaxPriceInUsd).div(weiValue));
     }
-  }, [currentGgpPrice?.price]);
+  }, [currentGgpPriceInAvax?.price, avaxPriceInUsd]);
 
   useEffect(() => {
-    console.log("IN USE EFFECT", ggpPriceInAvax.toString());
-    setRealGgpAmount(
-      avaxAmount
-        .div(ggpPriceInAvax)
-        .mul(parseEther((ggpCollatPercent / 100).toString()))
-    );
+    if (ggpPriceInAvax.eq(0)) {
+      setRealGgpAmount(BigNumber.from(0))
+    } else {
+      setRealGgpAmount(
+        avaxAmount
+          .div(ggpPriceInAvax)
+          .mul(parseEther((ggpCollatPercent / 100).toString()))
+      );
+    }
   }, [ggpPriceInAvax]);
 
-  useEffect(() => {
-    // setGgpPriceInAvax();
-  }, [ggpPriceInUsd]);
-
-  if (isFetching) return "fetching";
-  if (isLoading) return "loading";
-  if (error) return "error";
-
-  if (!stakers || !minSeconds || !currentGgpPrice) return null;
-  console.log("DA DATA", parseEther(data.price.toString()).toString());
+  if (!stakers || !minSeconds || !currentGgpPriceInAvax || !avaxPriceInUsd) return null;
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -144,7 +138,6 @@ export function Calculator() {
     }
   }
 
-  console.log({ realGgpAmount: realGgpAmount.toString(), checked });
   // Node Operators total eligible ggp staked
   let retailTegs = checked ? realGgpAmount : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
@@ -204,14 +197,14 @@ export function Calculator() {
       percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
     }
 
-    const inAvax = reward.mul(ggpPriceInAvax).div(weiValue);
-    const inUsd = reward.mul(ggpPriceInAvax).mul(15).div(weiValue);
+    const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(reward, avaxPriceInUsd);
+
     return {
       ...staker,
       reward,
       ggpStake: staker.effectiveGGPStaked,
-      inAvax,
-      inUsd,
+      avaxReward,
+      usdReward,
       percentStake,
     };
   });
@@ -240,18 +233,24 @@ export function Calculator() {
 
     const reward = getRewardAmount(ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
 
-    const inAvax = reward.mul(ggpPriceInAvax).div(weiValue);
-    const inUsd = reward.mul(ggpPriceInAvax).mul(15).div(weiValue);
+    const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(reward, avaxPriceInUsd);
     const percentStake = ggpStake.mul(weiValue).div(retailTegs);
     return {
       ...r,
       reward,
       ggpStake,
-      inAvax,
-      inUsd,
+      avaxReward,
+      usdReward,
       percentStake,
     };
   });
+
+  function getRewardValuesInAvaxAndUsd(reward: BigNumber, avaxPriceInUsd: BigNumber) {
+    return {
+      avaxReward: reward.mul(ggpPriceInAvax).div(weiValue),
+      usdReward: reward.mul(ggpPriceInAvax).mul(avaxPriceInUsd).div(weiValue).div(weiValue),
+    }
+  }
 
   return (
     <>
@@ -271,8 +270,8 @@ export function Calculator() {
               <ProtocolSettings
                 ggpPriceInAvax={ggpPriceInAvax}
                 setGgpPriceInAvax={setGgpPriceInAvax}
-                currentGgpPrice={currentGgpPrice.price}
-                avaxToUsd={parseEther(data.price.toString())}
+                currentGgpPrice={currentGgpPriceInAvax.price}
+                avaxPriceInUsd={avaxPriceInUsd}
                 ggpPriceInUsd={ggpPriceInUsd}
                 setGgpPriceInUsd={setGgpPriceInUsd}
               />
