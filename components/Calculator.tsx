@@ -15,6 +15,8 @@ import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { ProtocolSettings } from "./ProtocolSettings";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const { Paragraph, Title } = Typography;
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
@@ -47,11 +49,22 @@ export function Calculator() {
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
     parseEther("0.17")
   );
+  const [ggpPriceInUsd, setGgpPriceInUsd] = useState<BigNumber>(
+    parseEther("2.1")
+  );
   const [checked, setChecked] = useState(true);
 
   const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
   const { data: currentGgpPrice } = useGetGGPPriceInAVAX();
+
+  const { isLoading, error, data, isFetching } = useQuery({
+    queryKey: ["avax_price"],
+    queryFn: () =>
+      axios
+        .get("https://www.jsonbateman.com/avax_price")
+        .then((res) => res.data),
+  });
 
   // This is to make everything client side render because of a hydration mismatch
   const [isClient, setIsClient] = useState(false);
@@ -66,6 +79,7 @@ export function Calculator() {
   }, [currentGgpPrice?.price]);
 
   useEffect(() => {
+    console.log("IN USE EFFECT", ggpPriceInAvax.toString());
     setRealGgpAmount(
       avaxAmount
         .div(ggpPriceInAvax)
@@ -73,7 +87,16 @@ export function Calculator() {
     );
   }, [ggpPriceInAvax]);
 
+  useEffect(() => {
+    // setGgpPriceInAvax();
+  }, [ggpPriceInUsd]);
+
+  if (isFetching) return "fetching";
+  if (isLoading) return "loading";
+  if (error) return "error";
+
   if (!stakers || !minSeconds || !currentGgpPrice) return null;
+  console.log("DA DATA", parseEther(data.price.toString()).toString());
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -123,9 +146,7 @@ export function Calculator() {
 
   console.log({ realGgpAmount: realGgpAmount.toString(), checked });
   // Node Operators total eligible ggp staked
-  let retailTegs = checked
-    ? realGgpAmount
-    : BigNumber.from("0");
+  let retailTegs = checked ? realGgpAmount : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
 
   const eligibleStakers = stakers
@@ -241,16 +262,19 @@ export function Calculator() {
               <Title>Minipool Rewards Calculator</Title>
               <Typography>
                 <Paragraph style={{ fontSize: 18 }}>
-                  Estimate GGP rewards you'll recieve for running a minipool
-                  under current network conditions.
+                  Estimate GGP rewards you&apos;ll recieve for running a
+                  minipool under current network conditions.
                 </Paragraph>
               </Typography>
             </Col>
             <Col lg={8} md={20}>
               <ProtocolSettings
-                setGgpPriceInAvax={setGgpPriceInAvax}
                 ggpPriceInAvax={ggpPriceInAvax}
-                currentGgpPrice={currentGgpPrice}
+                setGgpPriceInAvax={setGgpPriceInAvax}
+                currentGgpPrice={currentGgpPrice.price}
+                avaxToUsd={parseEther(data.price.toString())}
+                ggpPriceInUsd={ggpPriceInUsd}
+                setGgpPriceInUsd={setGgpPriceInUsd}
               />
             </Col>
           </Row>
@@ -282,7 +306,9 @@ export function Calculator() {
             handleCheck={handleCheck}
             checked={checked}
             title={"Retail Node Ops"}
-            details={"This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."}
+            details={
+              "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."
+            }
             ggpStaked={retailTegs}
             stakers={retailStakers}
           />
@@ -291,7 +317,9 @@ export function Calculator() {
             handleCheck={handleCheck}
             checked={checked}
             title={"Investor Node Ops"}
-            details={"This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."}
+            details={
+              "This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."
+            }
             ggpStaked={investorTegs}
             stakers={investorStakers}
           />
