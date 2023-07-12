@@ -62,6 +62,7 @@ export const useStakers = () => {
     abi: stakerAbi,
     functionName: "getStakers",
     args: [BigNumber.from(0), BigNumber.from(1000)],
+    staleTime: 60_000,
   });
   return { data, isLoading };
 };

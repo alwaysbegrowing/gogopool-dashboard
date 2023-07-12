@@ -1,4 +1,3 @@
-import { debounce } from "@/helpers/debounce";
 import {
   Col,
   Descriptions,
@@ -85,7 +84,7 @@ export function YourMinipool({
               10: "10%",
               150: "150%",
             }}
-            onChange={debounce(handlePercentChange, 300)}
+            onChange={handlePercentChange}
           />
         </Col>
         <Col span={16}>

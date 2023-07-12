@@ -17,13 +17,19 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { ProtocolSettings } from "./ProtocolSettings";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Staker } from "@/pages/calculator";
 
 const { Paragraph, Title } = Typography;
 const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
 
-export function Calculator() {
+type Props = {
+  stakers: Staker[]
+}
+
+export function Calculator({ stakers }: Props) {
+  const t0 = performance.now()
   const isInvestorWallet = (staker: any) => {
     return INVESTOR_LIST.includes(staker.stakerAddr);
   };
@@ -54,7 +60,6 @@ export function Calculator() {
   );
   const [checked, setChecked] = useState(true);
 
-  const { data: stakers } = useStakers();
   const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
   const { data: currentGgpPriceInAvax } = useGetGGPPriceInAVAX();
   const { data: avaxPriceInUsd, isLoading, error, isFetching } = useQuery<BigNumber>({
@@ -251,6 +256,10 @@ export function Calculator() {
       usdReward: reward.mul(ggpPriceInAvax).mul(avaxPriceInUsd).div(weiValue).div(weiValue),
     }
   }
+
+  const t1 = performance.now()
+
+  console.log(t1 - t0)
 
   return (
     <>
