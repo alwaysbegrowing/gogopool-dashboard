@@ -24,19 +24,19 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
       render: (percentStake: string) => <>{`${(+formatEther(percentStake) * 100).toFixed(2)}%`}</>,
     },
     {
-      title: "GGP Reward",
+      title: "Monthly GGP Reward",
       dataIndex: "reward",
       key: "reward",
       render: (ggpReward: string) => <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>,
     },
     {
-      title: "Reward amount in AVAX",
+      title: "Monthly Reward amount in AVAX",
       dataIndex: "avaxReward",
       key: "avaxReward",
       render: (avaxReward: string) => <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>,
     },
     {
-      title: "Reward amount in USD",
+      title: "Monthly Reward amount in USD",
       dataIndex: "usdReward",
       key: "usdReward",
       render: (usdReward: string) => <>{`$${commify((+formatEther(usdReward)).toFixed(2))}`}</>,

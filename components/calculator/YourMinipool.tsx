@@ -1,3 +1,4 @@
+import { InfoCircleOutlined } from "@ant-design/icons";
 import {
   Col,
   Descriptions,
@@ -38,8 +39,9 @@ export function YourMinipool({
       {/*AVAX*/}
       <Row gutter={[0, 8]} justify="start">
         <Col span={16}>
-          <Tooltip title="Number of Minipools">
-            <Text strong>Number of Minipools</Text>
+          <Text strong>Number of Minipools &nbsp;</Text>
+          <Tooltip title="Number of Minipools You Wish to Create">
+            <InfoCircleOutlined />
           </Tooltip>
           <InputNumber
             style={{ width: "100%" }}
@@ -49,8 +51,9 @@ export function YourMinipool({
           />
         </Col>
         <Col span={16}>
-          <Tooltip title="AVAX Staked: 1000 per minipool.">
-            <Text strong>AVAX Staked</Text>
+          <Text strong>AVAX Staked &nbsp;</Text>
+          <Tooltip title="Always 1000 AVAX per minipool.">
+            <InfoCircleOutlined />
           </Tooltip>
           <Descriptions size="small" bordered>
             <Descriptions.Item label="AVAX">
@@ -63,8 +66,9 @@ export function YourMinipool({
         </Col>
         {/*GGP*/}
         <Col span={16}>
-          <Tooltip title="GGP Collateral Percentage is Calculated by the following formula: ((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
-            <Text strong>GGP Collateral Percentage</Text>
+          <Text strong>GGP Collateral Percentage &nbsp;</Text>
+          <Tooltip title="((GGP Stake * GGP price) / (AVAX Stake * AVAX Price)) * 100">
+            <InfoCircleOutlined />
           </Tooltip>
           <InputNumber
             style={{ width: "100%" }}
@@ -88,8 +92,9 @@ export function YourMinipool({
           />
         </Col>
         <Col span={16}>
+          <Text strong>GGP Stake &nbsp;</Text>
           <Tooltip title="GGP stake needed to reach collateral percentage">
-            <Text strong>GGP Stake</Text>
+            <InfoCircleOutlined />
           </Tooltip>
           <Input
             value={+formatEther(realGgpAmount)}

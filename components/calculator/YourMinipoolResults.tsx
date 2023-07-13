@@ -60,7 +60,9 @@ export default function YourMinipoolResults({
   const inputAmount = avaxAmountInUsd.add(ggpAmountInUsd);
 
   const outputAmount = ggpRewardPerYearInUsd.add(avaxRewardsPerYearGgp);
-  const APY = inputAmount.mul(weiValue).div(outputAmount);
+
+  console.log({ inputAmount: inputAmount.toString(), outputAmount: outputAmount.toString() })
+  const APY = outputAmount.mul(weiValue).div(inputAmount);
 
   return (
     <>
@@ -68,21 +70,13 @@ export default function YourMinipoolResults({
       <Col span={24}>
         <Typography>
           <Paragraph>
-            <Text style={{ fontSize: 16 }} strong>
-              GGP Minipool vs AVAX Validator
+            <Text style={{ fontSize: 20 }}>
+              With GoGoPool you will earn{" "}
+              <Text strong style={{ fontSize: 20, color: "#5d43ef" }}>
+                {Number(formatEther(APY.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}% more APY
+              </Text>
+              {" "}than solo staking using these parameters.
             </Text>
-            <br></br>With GoGoPool you will earn{" "}
-            <Text strong>
-              {Number(formatEther(APY.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(
-                undefined,
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }
-              )}
-              %
-            </Text>{" "}
-            more APY vs solo staking
           </Paragraph>
           <Divider />
           <Paragraph>
@@ -90,8 +84,12 @@ export default function YourMinipoolResults({
               Your Parameters
             </Text>
             <br></br>
-            Creating <Text strong>{numMinipools} Minipool(s)</Text> results in{" "}
-            <Text strong>{formatEther(avaxAmount)} AVAX</Text> being borrowed. For a GGP Collateral
+            Creating <Text strong>{numMinipools} Minipool(s)</Text> costs{" "}
+            <Text strong>{Number(formatEther(avaxAmount)).toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
+            } AVAX</Text>. For a GGP Collateral
             Percentage of <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> you are required to
             stake <Text strong>{formatEther(realGgpAmount)} GGP</Text>.
           </Paragraph>
@@ -102,7 +100,7 @@ export default function YourMinipoolResults({
             </Text>
             <br></br>
             <Text strong>{numMinipools} Minipool(s)</Text> at a Collateral Percentage of{" "}
-            <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> will yeild{" "}
+            <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> will yield{" "}
             <Text strong>
               $
               {Number(formatEther(ggpRewardPerYearInUsd)).toLocaleString(undefined, {
@@ -137,7 +135,12 @@ export default function YourMinipoolResults({
             </Text>
             <br></br>
             <Text>
-              Staking <Text strong>{formatEther(avaxAmount)} AVAX</Text> on a traditional validator
+              Staking <Text strong>{
+                Number(formatEther(avaxAmount)).toLocaleString(undefined, {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                })
+              } AVAX</Text> on a traditional validator
               will yield{" "}
               <Text strong>
                 $

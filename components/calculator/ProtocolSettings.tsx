@@ -1,5 +1,5 @@
 import { weiValue } from "@/hooks/mounted";
-import { Col, Input, Row, Typography, Button, Space } from "antd";
+import { Col, Input, Row, Typography, Button, Space, Descriptions } from "antd";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { ChangeEvent } from "react";
@@ -41,11 +41,27 @@ export function ProtocolSettings({
             <Input
               addonBefore="$"
               type="number"
-              value={+(+formatEther(ggpPriceInUsd)).toFixed(5)}
+              value={+(+formatEther(ggpPriceInUsd)).toFixed(2)}
               onChange={setBoth}
             />
             <Button onClick={resetGgpPrice}>Reset</Button>
           </Space.Compact>
+        </Col>
+        <Col span={24}>
+          <Descriptions size="small" bordered>
+            <Descriptions.Item label="AVAX Price">
+              ${Number(formatEther(avaxPriceInUsd)).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </Descriptions.Item>
+            <Descriptions.Item label="GGP Price">
+              ${Number(formatEther(ggpPriceInUsd)).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </Descriptions.Item>
+          </Descriptions>
         </Col>
       </Row>
     </>
