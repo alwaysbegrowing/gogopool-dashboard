@@ -1,6 +1,4 @@
-import * as React from "react";
-const { ethers } = require("ethers");
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { useContractReads, useContractRead } from "wagmi";
 
@@ -8,6 +6,7 @@ import { minipoolManagerAbi } from "@/abis/minipoolmanager";
 import { oracleAbi } from "@/abis/oracle";
 import { protocolDaoAbi } from "@/abis/protocoldao";
 import { stakerAbi } from "@/abis/staker";
+import { useEffect, useState } from "react";
 
 export const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 
@@ -27,15 +26,15 @@ export const stakingContract: Mp = {
 };
 
 export const useIsMounted = () => {
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  React.useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), []);
 
   return mounted;
 };
 
 export const useMinipools = () => {
-  const { data, isError, isLoading } = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       {
         ...minipoolmanagerContract,
@@ -68,7 +67,7 @@ export const useStakers = () => {
 };
 
 export const useStakingInfo = () => {
-  const { data, isError, isLoading } = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       {
         ...stakingContract,
@@ -99,7 +98,7 @@ export const useGetGGPPriceInAVAX = () => {
     address: "0x30fb915258D844E9dC420B2C3AA97420AEA16Db7",
     functionName: "getGGPPriceInAVAX",
   });
-  return { data, isLoading };
+  return { data: data?.price, isLoading };
 };
 
 export const toWei = (n: BigNumber) => {

@@ -1,8 +1,9 @@
 import { FormattedAddress } from "./FormattedAddress";
 import { Typography } from "antd";
-const { ethers } = require("ethers");
+import { ethers } from "ethers"
+const hashEmoji = require("hash-emoji")
+
 import { BinTools } from "avalanche";
-const hashEmoji = require("hash-emoji");
 
 const { Link } = Typography;
 const bintools = BinTools.getInstance();

@@ -1,10 +1,7 @@
 import {
   toWei,
-  useGetGGPPriceInAVAX,
-  useGetRewardsEligibilityMinSeconds,
   weiValue,
 } from "@/hooks/mounted";
-import { useStakers } from "@/hooks/mounted";
 import { Col, Divider, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -15,8 +12,6 @@ import { YourMinipool } from "./YourMinipool";
 import YourMinipoolResults from "./YourMinipoolResults";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { ProtocolSettings } from "./ProtocolSettings";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Staker } from "@/pages/calculator";
 
 const { Paragraph, Title } = Typography;
@@ -26,10 +21,17 @@ const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
 
 type Props = {
   stakers: Staker[]
+  minSeconds: BigNumber
+  currentGgpPriceInAvax: BigNumber
+  avaxPriceInUsd: BigNumber
 }
 
-export function Calculator({ stakers }: Props) {
-  const t0 = performance.now()
+export function Calculator({
+  stakers,
+  minSeconds,
+  currentGgpPriceInAvax,
+  avaxPriceInUsd,
+}: Props) {
   const isInvestorWallet = (staker: any) => {
     return INVESTOR_LIST.includes(staker.stakerAddr);
   };
@@ -53,35 +55,12 @@ export function Calculator({ stakers }: Props) {
     parseEther("0")
   );
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(
-    parseEther("0.17")
+    currentGgpPriceInAvax
   );
   const [ggpPriceInUsd, setGgpPriceInUsd] = useState<BigNumber>(
-    parseEther("2.1")
+    currentGgpPriceInAvax.mul(avaxPriceInUsd).div(weiValue)
   );
   const [checked, setChecked] = useState(true);
-
-  const { data: minSeconds } = useGetRewardsEligibilityMinSeconds();
-  const { data: currentGgpPriceInAvax } = useGetGGPPriceInAVAX();
-  const { data: avaxPriceInUsd, isLoading, error, isFetching } = useQuery<BigNumber>({
-    queryKey: ["avax_price"],
-    queryFn: () =>
-      axios
-        .get("https://www.jsonbateman.com/avax_price")
-        .then((res) => parseEther(res.data.price.toString()))
-  });
-
-  // This is to make everything client side render because of a hydration mismatch
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (currentGgpPriceInAvax?.price && avaxPriceInUsd) {
-      setGgpPriceInAvax(currentGgpPriceInAvax?.price);
-      setGgpPriceInUsd(currentGgpPriceInAvax?.price.mul(avaxPriceInUsd).div(weiValue));
-    }
-  }, [currentGgpPriceInAvax?.price, avaxPriceInUsd]);
 
   useEffect(() => {
     if (ggpPriceInAvax.eq(0)) {
@@ -257,82 +236,76 @@ export function Calculator({ stakers }: Props) {
     }
   }
 
-  const t1 = performance.now()
-
-  console.log(t1 - t0)
-
   return (
     <>
-      {isClient && (
-        <Space direction="vertical">
-          <Row justify="space-between" gutter={32}>
-            <Col lg={16} md={20}>
-              <Title>Minipool Rewards Calculator</Title>
-              <Typography>
-                <Paragraph style={{ fontSize: 18 }}>
-                  Estimate GGP rewards you&apos;ll recieve for running a
-                  minipool under current network conditions.
-                </Paragraph>
-              </Typography>
-            </Col>
-            <Col lg={8} md={20}>
-              <ProtocolSettings
-                ggpPriceInAvax={ggpPriceInAvax}
-                setGgpPriceInAvax={setGgpPriceInAvax}
-                currentGgpPrice={currentGgpPriceInAvax.price}
-                avaxPriceInUsd={avaxPriceInUsd}
-                ggpPriceInUsd={ggpPriceInUsd}
-                setGgpPriceInUsd={setGgpPriceInUsd}
-              />
-            </Col>
-          </Row>
-          <Row gutter={32}>
-            <Col xl={12} lg={12} md={12} sm={24}>
-              <YourMinipool
-                numMinipools={numMinipools}
-                avaxAmount={avaxAmount}
-                ggpCollatPercent={ggpCollatPercent}
-                realGgpAmount={realGgpAmount}
-                handleMinipoolChange={handleMinipoolChange}
-                handlePercentChange={handlePercentChange}
-                handleGgpStake={handleGgpStake}
-              />
-            </Col>
-            <Col xl={10} lg={12} md={12} sm={24}>
-              <YourMinipoolResults
-                ggpCollatPercent={ggpCollatPercent}
-                realGgpAmount={realGgpAmount}
-                avaxAmount={avaxAmount}
-                numMinipools={numMinipools}
-              />
-            </Col>
-          </Row>
-          <Divider />
-          <RatioRewardsTable rewardAmounts={rewardAmounts} />
-          <Divider />
-          <NodeOpRewardTable
-            handleCheck={handleCheck}
-            checked={checked}
-            title={"Retail Node Ops"}
-            details={
-              "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."
-            }
-            ggpStaked={retailTegs}
-            stakers={retailStakers}
-          />
-          <Divider />
-          <NodeOpRewardTable
-            handleCheck={handleCheck}
-            checked={checked}
-            title={"Investor Node Ops"}
-            details={
-              "This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."
-            }
-            ggpStaked={investorTegs}
-            stakers={investorStakers}
-          />
-        </Space>
-      )}
+      <Space direction="vertical">
+        <Row justify="space-between" gutter={32}>
+          <Col lg={16} md={20}>
+            <Title>Minipool Rewards Calculator</Title>
+            <Typography>
+              <Paragraph style={{ fontSize: 18 }}>
+                Estimate GGP rewards you&apos;ll recieve for running a
+                minipool under current network conditions.
+              </Paragraph>
+            </Typography>
+          </Col>
+          <Col lg={8} md={20}>
+            <ProtocolSettings
+              ggpPriceInAvax={ggpPriceInAvax}
+              setGgpPriceInAvax={setGgpPriceInAvax}
+              currentGgpPrice={currentGgpPriceInAvax}
+              avaxPriceInUsd={avaxPriceInUsd}
+              ggpPriceInUsd={ggpPriceInUsd}
+              setGgpPriceInUsd={setGgpPriceInUsd}
+            />
+          </Col>
+        </Row>
+        <Row gutter={32}>
+          <Col xl={12} lg={12} md={12} sm={24}>
+            <YourMinipool
+              numMinipools={numMinipools}
+              avaxAmount={avaxAmount}
+              ggpCollatPercent={ggpCollatPercent}
+              realGgpAmount={realGgpAmount}
+              handleMinipoolChange={handleMinipoolChange}
+              handlePercentChange={handlePercentChange}
+              handleGgpStake={handleGgpStake}
+            />
+          </Col>
+          <Col xl={10} lg={12} md={12} sm={24}>
+            <YourMinipoolResults
+              ggpCollatPercent={ggpCollatPercent}
+              realGgpAmount={realGgpAmount}
+              avaxAmount={avaxAmount}
+              numMinipools={numMinipools}
+            />
+          </Col>
+        </Row>
+        <Divider />
+        <RatioRewardsTable rewardAmounts={rewardAmounts} />
+        <Divider />
+        <NodeOpRewardTable
+          handleCheck={handleCheck}
+          checked={checked}
+          title={"Retail Node Ops"}
+          details={
+            "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."
+          }
+          ggpStaked={retailTegs}
+          stakers={retailStakers}
+        />
+        <Divider />
+        <NodeOpRewardTable
+          handleCheck={handleCheck}
+          checked={checked}
+          title={"Investor Node Ops"}
+          details={
+            "This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."
+          }
+          ggpStaked={investorTegs}
+          stakers={investorStakers}
+        />
+      </Space>
     </>
   );
 }
