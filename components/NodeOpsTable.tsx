@@ -1,17 +1,9 @@
 import React from "react";
-import { Card, Table, Button, Typography } from "antd";
-const { ethers } = require("ethers");
-const { Title } = Typography;
-import { useContractRead } from "wagmi";
-import stakerABI from "../abis/staker.json";
+import { Card, Table } from "antd";
 import { toWei } from "../hooks/mounted";
-const { Column, ColumnGroup } = Table;
-import { formatDistance } from "date-fns";
+const { Column } = Table;
 import { useStakers } from "@/hooks/mounted";
-const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
-const hashEmoji = require("hash-emoji");
-const { Text, Link } = Typography;
-import { FormattedAddress } from "./FormattedAddress";
+import { CopyableAddress } from "./Copyable";
 
 const App: React.FC = () => {
   const { data, isLoading } = useStakers();
@@ -45,26 +37,15 @@ const App: React.FC = () => {
         <Column
           title="Node Address"
           dataIndex="0"
-          key="2"
+          key="0"
           render={(n) => {
-            return (
-              <>
-                {hashEmoji(n)}
-                {` `}
-                <Link
-                  copyable={{ text: n }}
-                  href={`https://snowtrace.io/address/${n}`}
-                >
-                  {<FormattedAddress address={n} />}
-                </Link>
-              </>
-            );
+            return <CopyableAddress address={n} />;
           }}
         />
         <Column
           title="GGP Staked"
           dataIndex="6"
-          key="2"
+          key="1"
           render={(n) => {
             return toWei(n).toLocaleString();
           }}

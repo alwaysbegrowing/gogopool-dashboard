@@ -18,7 +18,6 @@ const buttonColors: { [key: string]: string } = {
 };
 
 export default function DiscordMessage({ msg, timestamp }: any) {
-  console.log(msg);
   const time = formatDistanceToNow(timestamp, { addSuffix: true });
   return (
     <Space direction="vertical">
@@ -122,13 +121,11 @@ export default function DiscordMessage({ msg, timestamp }: any) {
                                 {embed.fields.map((field: any) => (
                                   <div
                                     key={field.id}
-                                    className={`discord-embed-field${
-                                      field.inline
-                                        ? ` discord-embed-inline-field discord-embed-inline-field-${
-                                            (inlineFieldIndex++ % 3) + 1
-                                          }`
-                                        : ""
-                                    }`}
+                                    className={`discord-embed-field${field.inline
+                                      ? ` discord-embed-inline-field discord-embed-inline-field-${(inlineFieldIndex++ % 3) + 1
+                                      }`
+                                      : ""
+                                      }`}
                                   >
                                     <div
                                       className="discord-field-title overflow-hidden break-all"
@@ -194,9 +191,8 @@ export default function DiscordMessage({ msg, timestamp }: any) {
                       comp.type === 2 ? (
                         comp.style === 5 ? (
                           <a
-                            className={`discord-button discord-button-hoverable ${
-                              buttonColors[comp.style]
-                            }`}
+                            className={`discord-button discord-button-hoverable ${buttonColors[comp.style]
+                              }`}
                             key={comp.id}
                             target="_blank"
                             href={comp.url}
@@ -222,9 +218,8 @@ export default function DiscordMessage({ msg, timestamp }: any) {
                           </a>
                         ) : (
                           <div
-                            className={`discord-button discord-button-hoverable ${
-                              buttonColors[comp.style]
-                            }`}
+                            className={`discord-button discord-button-hoverable ${buttonColors[comp.style]
+                              }`}
                             key={comp.id}
                           >
                             <span>{comp.label}</span>

@@ -1,36 +1,40 @@
-import * as React from "react";
-const { ethers } = require("ethers");
-import { useContractReads, useContractRead } from "wagmi";
-import stakerABI from "../abis/staker.json";
+import { BigNumber, ethers } from "ethers";
 
-import minipoolManagerABI from "../abis/minipoolmanager.json";
-import { BigNumber } from "ethers";
-const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
+import { useContractReads, useContractRead } from "wagmi";
+
+import { minipoolManagerAbi } from "@/abis/minipoolmanager";
+import { oracleAbi } from "@/abis/oracle";
+import { protocolDaoAbi } from "@/abis/protocoldao";
+import { stakerAbi } from "@/abis/staker";
+import { useEffect, useState } from "react";
+
+export const weiValue = ethers.BigNumber.from("1000000000000000000"); // represents 1 Ether in wei (10^18)
 
 interface Mp {
   address: `0x${string}`;
   abi: any;
 }
+
 export const minipoolmanagerContract: Mp = {
   address: "0xc8de41c35fb389286546cf4107102a7656da7037",
-  abi: minipoolManagerABI as any,
+  abi: minipoolManagerAbi as any,
 };
 
 export const stakingContract: Mp = {
   address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
-  abi: stakerABI as any,
+  abi: stakerAbi,
 };
 
 export const useIsMounted = () => {
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  React.useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), []);
 
   return mounted;
 };
 
 export const useMinipools = () => {
-  const { data, isError, isLoading } = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       {
         ...minipoolmanagerContract,
@@ -52,17 +56,18 @@ export const useMinipools = () => {
 };
 
 export const useStakers = () => {
-  const { data, isLoading }: any = useContractRead({
+  const { data, isLoading } = useContractRead({
     address: "0x9946e68490D71Fe976951e360f295c4Cf8531D00",
-    abi: stakerABI,
+    abi: stakerAbi,
     functionName: "getStakers",
-    args: [0, 1000],
+    args: [BigNumber.from(0), BigNumber.from(1000)],
+    staleTime: 60_000,
   });
   return { data, isLoading };
 };
 
 export const useStakingInfo = () => {
-  const { data, isError, isLoading } = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       {
         ...stakingContract,
@@ -75,6 +80,25 @@ export const useStakingInfo = () => {
     ],
   });
   return { data, isLoading };
+};
+
+export const useGetRewardsEligibilityMinSeconds = () => {
+  const { data, isLoading } = useContractRead({
+    abi: protocolDaoAbi,
+    address: "0x41A76343eb93B4790e53c8E2789E09EF41195D0B",
+    functionName: "getRewardsEligibilityMinSeconds",
+  });
+
+  return { data, isLoading };
+};
+
+export const useGetGGPPriceInAVAX = () => {
+  const { data, isLoading } = useContractRead({
+    abi: oracleAbi,
+    address: "0x30fb915258D844E9dC420B2C3AA97420AEA16Db7",
+    functionName: "getGGPPriceInAVAX",
+  });
+  return { data: data?.price, isLoading };
 };
 
 export const toWei = (n: BigNumber) => {
