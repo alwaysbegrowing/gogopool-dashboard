@@ -82,6 +82,10 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
   function handlePercentChange(percent: number | null) {
     if (percent) {
       setGgpCollatPercent(percent);
+      if (ggpPriceInAvax.eq(0)) {
+        setRealGgpAmount(BigNumber.from(0))
+        return
+      }
       setRealGgpAmount(avaxAmount.div(ggpPriceInAvax).mul(parseEther((percent / 100).toString())));
     }
   }
@@ -174,7 +178,11 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
     percentStake: BigNumber.from(0),
   };
 
-  rewardAmounts.ggpStake = avaxAmount.div(ggpPriceInAvax).mul(rewardAmounts.collateralRatio);
+  if (ggpPriceInAvax.eq(0)) {
+    rewardAmounts.ggpStake = BigNumber.from(0)
+  } else {
+    rewardAmounts.ggpStake = avaxAmount.div(ggpPriceInAvax).mul(rewardAmounts.collateralRatio);
+  }
 
   rewardAmounts.reward = getRewardAmount(rewardAmounts.ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
   const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(

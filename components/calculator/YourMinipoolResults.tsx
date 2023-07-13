@@ -30,13 +30,13 @@ export default function YourMinipoolResults({
   const ggpMinipoolBaseApy = parseEther("0.075");
 
   const ggpRewardPerYearInUsd = rewardAmounts.usdReward.mul(12);
-  const avaxRewardsPerYearGgp = avaxPriceInUsd
+  const avaxYearlyRewardsMinipool = avaxPriceInUsd
     .mul(ggpMinipoolBaseApy)
     .div(weiValue)
     .mul(avaxAmount)
     .div(weiValue);
 
-  const avaxRewardPerYearAvax = avaxPriceInUsd
+  const avaxYearlyRewardsValidator = avaxPriceInUsd
     .mul(avaxValidatorBaseApy)
     .div(weiValue)
     .mul(avaxAmount)
@@ -54,15 +54,10 @@ export default function YourMinipoolResults({
     .mul(avaxPriceInUsd)
     .div(weiValue);
 
-  console.log("avaxAMountInUsd", formatEther(avaxAmountInUsd));
-  console.log("ggpAmotunInUsd", formatEther(ggpAmountInUsd));
-
   const inputAmount = avaxAmountInUsd.add(ggpAmountInUsd);
+  const outputAmount = ggpRewardPerYearInUsd.add(avaxYearlyRewardsMinipool);
 
-  const outputAmount = ggpRewardPerYearInUsd.add(avaxRewardsPerYearGgp);
-
-  console.log({ inputAmount: inputAmount.toString(), outputAmount: outputAmount.toString() })
-  const APY = outputAmount.mul(weiValue).div(inputAmount);
+  const ggpApy = outputAmount.mul(weiValue).div(inputAmount);
 
   return (
     <>
@@ -71,11 +66,11 @@ export default function YourMinipoolResults({
         <Typography>
           <Paragraph>
             <Text style={{ fontSize: 20 }}>
-              With GoGoPool you will earn{" "}
+              With GoGoPool you will earn&nbsp;
               <Text strong style={{ fontSize: 20, color: "#5d43ef" }}>
-                {Number(formatEther(APY.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}% more APY
+                {Number(formatEther(ggpApy.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}% more APY
               </Text>
-              {" "}than solo staking using these parameters.
+              &nbsp;than solo staking using these parameters.
             </Text>
           </Paragraph>
           <Divider />
@@ -84,7 +79,7 @@ export default function YourMinipoolResults({
               Your Parameters
             </Text>
             <br></br>
-            Creating <Text strong>{numMinipools} Minipool(s)</Text> costs{" "}
+            Creating <Text strong>{numMinipools} Minipool(s)</Text> costs&nbsp;
             <Text strong>{Number(formatEther(avaxAmount)).toLocaleString(undefined, {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
@@ -96,42 +91,48 @@ export default function YourMinipoolResults({
           <Divider />
           <Paragraph>
             <Text style={{ fontSize: 16 }} strong>
-              GGP Minipool Operator Revenue
+              Operator Revenue:&emsp;
+            </Text>
+            <Text style={{ color: "#5d43ef", fontSize: 16 }} strong>
+              GGP Minipool
             </Text>
             <br></br>
-            <Text strong>{numMinipools} Minipool(s)</Text> at a Collateral Percentage of{" "}
-            <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> will yield{" "}
+            <Text strong>{numMinipools} Minipool(s)</Text> at a Collateral Percentage of&nbsp;
+            <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> will yield&nbsp;
             <Text strong>
               $
               {Number(formatEther(ggpRewardPerYearInUsd)).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })}{" "}
+              })}&nbsp;
             </Text>
-            a year in GGP Rewards.{" "}
+            a year in GGP Rewards.&nbsp;
             <Text>
-              In addition youll earn{" "}
+              In addition you&#39;ll earn&nbsp;
               <Text strong>
                 $
-                {Number(formatEther(avaxRewardsPerYearGgp)).toLocaleString(undefined, {
+                {Number(formatEther(avaxYearlyRewardsMinipool)).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                })}{" "}
-              </Text>{" "}
+                })}&nbsp;
+              </Text>
             </Text>
-            which gives an APY of{" "}
-            <Text strong>
-              {Number(formatEther(APY.mul(100))).toLocaleString(undefined, {
+            from the <Tooltip title="as of 7/13/2023">current*</Tooltip> GGP base APY of <Text strong>{Number(formatEther(ggpMinipoolBaseApy.mul(100))).toFixed(2)}%</Text>. Which gives a total:&nbsp;
+            <Text strong style={{ color: "#5d43ef" }}>
+              {Number(formatEther(ggpApy.mul(100))).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
-              %
+              % APY
             </Text>
           </Paragraph>
           <Divider />
           <Paragraph>
             <Text style={{ fontSize: 16 }} strong>
-              AVAX Validator Operator Revenue
+              Operator Revenue:&emsp;
+            </Text>
+            <Text style={{ color: "#e84142", fontSize: 16 }} strong>
+              AVAX Validator
             </Text>
             <br></br>
             <Text>
@@ -141,18 +142,18 @@ export default function YourMinipoolResults({
                   maximumFractionDigits: 1,
                 })
               } AVAX</Text> on a traditional validator
-              will yield{" "}
+              will yield&nbsp;
               <Text strong>
                 $
-                {Number(formatEther(avaxRewardPerYearAvax)).toLocaleString(undefined, {
+                {Number(formatEther(avaxYearlyRewardsValidator)).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                })}{" "}
-              </Text>{" "}
-              per{" "}
+                })}&nbsp;
+              </Text>&nbsp;
+              per&nbsp;
             </Text>
-            year at the <Tooltip title="as of 7/13/2023">current*</Tooltip> validator APY of{" "}
-            <Text strong>{formatEther(avaxValidatorBaseApy.mul(100))}%</Text>
+            year at the <Tooltip title="as of 7/13/2023">current*</Tooltip> validator total:&nbsp;
+            <Text style={{ color: "#e84142" }} strong>{formatEther(avaxValidatorBaseApy.mul(100))}% APY</Text>
           </Paragraph>
         </Typography>
       </Col>

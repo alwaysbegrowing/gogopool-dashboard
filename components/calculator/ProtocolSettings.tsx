@@ -18,7 +18,7 @@ export function ProtocolSettings({
   ggpPriceInUsd: BigNumber;
   setGgpPriceInUsd: (b: BigNumber) => void;
 }) {
-  const { Title } = Typography;
+  const { Title, Text } = Typography;
 
   const resetGgpPrice = () => {
     setGgpPriceInUsd(currentGgpPrice.mul(avaxPriceInUsd).div(weiValue));
@@ -48,6 +48,7 @@ export function ProtocolSettings({
           </Space.Compact>
         </Col>
         <Col span={24}>
+          <Text strong>Current Prices</Text>
           <Descriptions size="small" bordered>
             <Descriptions.Item label="AVAX Price">
               ${Number(formatEther(avaxPriceInUsd)).toLocaleString(undefined, {
@@ -56,7 +57,7 @@ export function ProtocolSettings({
               })}
             </Descriptions.Item>
             <Descriptions.Item label="GGP Price">
-              ${Number(formatEther(ggpPriceInUsd)).toLocaleString(undefined, {
+              ${Number(formatEther(currentGgpPrice.mul(avaxPriceInUsd).div(weiValue))).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
