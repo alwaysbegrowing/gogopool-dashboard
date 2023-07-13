@@ -1,7 +1,7 @@
 import React from "react";
 import CustomLayout from "@/components/Layout/Layout";
 import { Calculator } from "@/components/calculator/Calculator";
-import { useGetGGPPriceInAVAX, useGetRewardsEligibilityMinSeconds, useStakers } from "@/hooks/mounted";
+import { useGetGGPPriceInAVAX, useStakers } from "@/hooks/mounted";
 import { BigNumber } from "ethers";
 import axios from "axios";
 import { parseEther } from "ethers/lib/utils.js";
@@ -26,11 +26,13 @@ export interface Staker {
   reward: BigNumber;
   rewardsStartTime: BigNumber;
   stakerAddr: `0x${string}`;
+  key: string,
+  usdReward: BigNumber,
+  avaxReward: BigNumber,
 }
 
 const App = () => {
   const { data: stakers, isLoading: stakersLoading } = useStakers();
-  const { data: minSeconds, isLoading: minSecondsLoading } = useGetRewardsEligibilityMinSeconds();
   const { data: currentGgpPriceInAvax, isLoading: ggpPriceLoading } = useGetGGPPriceInAVAX();
   const { data: avaxPriceInUsd, isLoading: avaxPriceLoading } = useQuery<BigNumber>({
     queryKey: ["avax_price"],
@@ -42,13 +44,12 @@ const App = () => {
 
   return (
     <CustomLayout>
-      {(stakersLoading || minSecondsLoading || ggpPriceLoading || avaxPriceLoading) && (<Spin />)}
-      {(!stakers || !minSeconds || !currentGgpPriceInAvax || !avaxPriceInUsd)
+      {(stakersLoading || ggpPriceLoading || avaxPriceLoading) && (<Spin />)}
+      {(!stakers || !currentGgpPriceInAvax || !avaxPriceInUsd)
         ? null
         : (
           <Calculator
             stakers={stakers as Staker[]}
-            minSeconds={minSeconds}
             currentGgpPriceInAvax={currentGgpPriceInAvax}
             avaxPriceInUsd={avaxPriceInUsd}
           />

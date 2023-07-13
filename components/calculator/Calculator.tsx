@@ -16,14 +16,15 @@ const INVESTOR_LIST = ["0xFE5200De605AdCB6306F4CDed77f9A8D9FD47127"];
 const RETAIL_REWARD_AMOUNT = BigNumber.from("45749504487698707175523");
 const INVESTOR_REWARD_AMOUNT = BigNumber.from("5083278276410967463947");
 
-type Props = {
-  stakers: Staker[];
-  minSeconds: BigNumber;
-  currentGgpPriceInAvax: BigNumber;
-  avaxPriceInUsd: BigNumber;
-};
+function getRewardValuesInAvaxAndUsd(reward: BigNumber, avaxPriceInUsd: BigNumber, ggpPriceInAvax: BigNumber) {
+  return {
+    avaxReward: reward.mul(ggpPriceInAvax).div(weiValue),
+    usdReward: reward.mul(ggpPriceInAvax).mul(avaxPriceInUsd).div(weiValue).div(weiValue),
+  };
+}
 
 export type RewardAmount = {
+  key: string,
   collateralRatioString: string;
   collateralRatio: BigNumber;
   reward: BigNumber;
@@ -33,7 +34,13 @@ export type RewardAmount = {
   ggpStake: BigNumber;
 };
 
-export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPriceInUsd }: Props) {
+type Props = {
+  stakers: Staker[];
+  currentGgpPriceInAvax: BigNumber;
+  avaxPriceInUsd: BigNumber;
+};
+
+export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: Props) {
   const isInvestorWallet = (staker: any) => {
     return INVESTOR_LIST.includes(staker.stakerAddr);
   };
@@ -50,11 +57,11 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
   const [numMinipools, setNumMinipools] = useState<number>(1);
   const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(50);
   const [realGgpAmount, setRealGgpAmount] = useState<BigNumber>(parseEther("0"));
+  const [checked, setChecked] = useState(true);
   const [ggpPriceInAvax, setGgpPriceInAvax] = useState<BigNumber>(currentGgpPriceInAvax);
   const [ggpPriceInUsd, setGgpPriceInUsd] = useState<BigNumber>(
     currentGgpPriceInAvax.mul(avaxPriceInUsd).div(weiValue)
   );
-  const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     if (ggpPriceInAvax.eq(0)) {
@@ -65,8 +72,6 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
       );
     }
   }, [ggpPriceInAvax]);
-
-  if (!stakers || !minSeconds || !currentGgpPriceInAvax || !avaxPriceInUsd) return null;
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -107,7 +112,7 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
     }
   }
 
-  // Node Operators total eligible ggp staked
+  // Node Operators Total Eligible GGP Staked (TEGS)
   let retailTegs = checked ? realGgpAmount : BigNumber.from("0");
   let investorTegs = BigNumber.from(0);
 
@@ -118,9 +123,7 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
     .map((staker) => {
       // calculate effective ggp stake and total eligible ggp staked
       const max = staker.avaxValidatingHighWater.mul(parseEther("1.5")).div(weiValue);
-
       const ggpAsAVAX = staker.ggpStaked.mul(ggpPriceInAvax).div(weiValue);
-
       let effectiveGGPStaked = staker.ggpStaked;
       if (!ggpPriceInAvax.eq(parseEther("0"))) {
         effectiveGGPStaked = ggpAsAVAX.gt(max)
@@ -140,7 +143,7 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
     })
     .sort((a, b) => toWei(b.effectiveGGPStaked) - toWei(a.effectiveGGPStaked));
 
-  // calculations that depend on TotalEligibleGGPStaked (tegs)
+  // calculations that depend on Total Eligible GGP Staked (TEGS)
   let fullStakers = eligibleStakers.map((staker) => {
     let reward;
     let percentStake;
@@ -152,10 +155,11 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
       percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
     }
 
-    const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(reward, avaxPriceInUsd);
+    const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(reward, avaxPriceInUsd, ggpPriceInAvax);
 
     return {
       ...staker,
+      key: staker.stakerAddr,
       reward,
       ggpStake: staker.effectiveGGPStaked,
       avaxReward,
@@ -165,10 +169,11 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
   });
 
   const retailStakers = fullStakers.filter((staker) => !isInvestorWallet(staker));
-
   const investorStakers = fullStakers.filter((staker) => isInvestorWallet(staker));
+
   // New Node variable reward amounts
   let rewardAmounts: RewardAmount = {
+    key: '1',
     collateralRatioString: ggpCollatPercent.toFixed(1).toString() + "%",
     collateralRatio: parseEther((ggpCollatPercent / 100).toFixed(5)),
     reward: BigNumber.from(0),
@@ -177,28 +182,21 @@ export function Calculator({ stakers, minSeconds, currentGgpPriceInAvax, avaxPri
     usdReward: BigNumber.from(0),
     percentStake: BigNumber.from(0),
   };
-
-  if (ggpPriceInAvax.eq(0)) {
-    rewardAmounts.ggpStake = BigNumber.from(0)
-  } else {
+  if (!ggpPriceInAvax.eq(0)) {
     rewardAmounts.ggpStake = avaxAmount.div(ggpPriceInAvax).mul(rewardAmounts.collateralRatio);
   }
 
   rewardAmounts.reward = getRewardAmount(rewardAmounts.ggpStake, retailTegs, RETAIL_REWARD_AMOUNT);
+
   const { avaxReward, usdReward } = getRewardValuesInAvaxAndUsd(
     rewardAmounts.reward,
-    avaxPriceInUsd
+    avaxPriceInUsd,
+    ggpPriceInAvax,
   );
+
   rewardAmounts.avaxReward = avaxReward;
   rewardAmounts.usdReward = usdReward;
   rewardAmounts.percentStake = rewardAmounts.ggpStake.mul(weiValue).div(retailTegs);
-
-  function getRewardValuesInAvaxAndUsd(reward: BigNumber, avaxPriceInUsd: BigNumber) {
-    return {
-      avaxReward: reward.mul(ggpPriceInAvax).div(weiValue),
-      usdReward: reward.mul(ggpPriceInAvax).mul(avaxPriceInUsd).div(weiValue).div(weiValue),
-    };
-  }
 
   return (
     <>

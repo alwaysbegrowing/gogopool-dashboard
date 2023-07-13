@@ -52,7 +52,7 @@ export function YourMinipool({
         </Col>
         <Col span={16}>
           <Text strong>AVAX Staked &nbsp;</Text>
-          <Tooltip title="Always 1000 AVAX per minipool.">
+          <Tooltip title="Always 1000 AVAX per minipool">
             <InfoCircleOutlined />
           </Tooltip>
           <Descriptions size="small" bordered>

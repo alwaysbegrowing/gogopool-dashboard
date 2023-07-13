@@ -30,13 +30,13 @@ export default function YourMinipoolResults({
   const ggpMinipoolBaseApy = parseEther("0.075");
 
   const ggpRewardPerYearInUsd = rewardAmounts.usdReward.mul(12);
-  const avaxYearlyRewardsMinipool = avaxPriceInUsd
+  const minipoolYearlyRewardsInAvax = avaxPriceInUsd
     .mul(ggpMinipoolBaseApy)
     .div(weiValue)
     .mul(avaxAmount)
     .div(weiValue);
 
-  const avaxYearlyRewardsValidator = avaxPriceInUsd
+  const validatorYearlyRewardsInAvax = avaxPriceInUsd
     .mul(avaxValidatorBaseApy)
     .div(weiValue)
     .mul(avaxAmount)
@@ -55,7 +55,7 @@ export default function YourMinipoolResults({
     .div(weiValue);
 
   const inputAmount = avaxAmountInUsd.add(ggpAmountInUsd);
-  const outputAmount = ggpRewardPerYearInUsd.add(avaxYearlyRewardsMinipool);
+  const outputAmount = ggpRewardPerYearInUsd.add(minipoolYearlyRewardsInAvax);
 
   const ggpApy = outputAmount.mul(weiValue).div(inputAmount);
 
@@ -111,7 +111,7 @@ export default function YourMinipoolResults({
               In addition you&#39;ll earn&nbsp;
               <Text strong>
                 $
-                {Number(formatEther(avaxYearlyRewardsMinipool)).toLocaleString(undefined, {
+                {Number(formatEther(minipoolYearlyRewardsInAvax)).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}&nbsp;
@@ -145,7 +145,7 @@ export default function YourMinipoolResults({
               will yield&nbsp;
               <Text strong>
                 $
-                {Number(formatEther(avaxYearlyRewardsValidator)).toLocaleString(undefined, {
+                {Number(formatEther(validatorYearlyRewardsInAvax)).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}&nbsp;

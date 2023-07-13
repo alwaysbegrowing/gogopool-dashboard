@@ -4,6 +4,7 @@ import { BigNumber } from "ethers";
 import { CopyableAddress } from "@/components/Copyable";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useState } from "react";
+import { Staker } from "@/pages/calculator";
 
 export function NodeOpRewardTable({
   title,
@@ -16,7 +17,7 @@ export function NodeOpRewardTable({
   title: "Retail Node Ops" | "Investor Node Ops";
   details: string,
   ggpStaked: BigNumber;
-  stakers: any;
+  stakers: Staker[];
   checked: boolean
   handleCheck: (e: CheckboxChangeEvent) => void;
 }) {
