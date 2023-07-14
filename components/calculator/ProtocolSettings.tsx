@@ -34,7 +34,7 @@ export function ProtocolSettings({
 
   return (
     <>
-      <Title level={4}>Manually Adjust GGP Price</Title>
+      <Title level={3}>Manually Adjust GGP Price</Title>
       <Row gutter={[32, 16]} align="middle" justify="start">
         <Col span={24}>
           <Space.Compact style={{ width: "100%" }}>
@@ -50,13 +50,13 @@ export function ProtocolSettings({
         <Col span={24}>
           <Text strong>Current Prices</Text>
           <Descriptions size="small" bordered>
-            <Descriptions.Item label="AVAX Price">
+            <Descriptions.Item label="AVAX">
               ${Number(formatEther(avaxPriceInUsd)).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </Descriptions.Item>
-            <Descriptions.Item label="GGP Price">
+            <Descriptions.Item label="GGP">
               ${Number(formatEther(currentGgpPrice.mul(avaxPriceInUsd).div(weiValue))).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,

@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { Col, Divider, Tooltip, Typography } from "antd";
+import { Col, Divider, Typography } from "antd";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
 import { weiValue } from "@/hooks/mounted";
 import { RewardAmount } from "./Calculator";
@@ -25,7 +25,7 @@ export default function YourMinipoolResults({
 }: Props) {
   const { Paragraph, Text, Title } = Typography;
 
-  // As of 7/13/2023
+  // as of 7/13/2023
   const avaxValidatorBaseApy = parseEther("0.0798");
   const ggpMinipoolBaseApy = parseEther("0.075");
 
@@ -62,14 +62,14 @@ export default function YourMinipoolResults({
   return (
     <>
       <Title level={3}>Results</Title>
-      <Col span={24}>
+      <Col>
         <Typography>
           <Paragraph>
-            <Text style={{ fontSize: 20 }}>
+            <Text strong style={{ fontSize: 20, color: "#5d43ef" }}>
               With GoGoPool you will earn&nbsp;
-              <Text strong style={{ fontSize: 20, color: "#5d43ef" }}>
-                {Number(formatEther(ggpApy.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}% more APY
-              </Text>
+              {Number(formatEther(ggpApy.sub(avaxValidatorBaseApy).mul(100))).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}% more APY
+            </Text>
+            <Text style={{ fontSize: 20 }}>
               &nbsp;than solo staking using these parameters.
             </Text>
           </Paragraph>
@@ -79,14 +79,18 @@ export default function YourMinipoolResults({
               Your Parameters
             </Text>
             <br></br>
-            Creating <Text strong>{numMinipools} Minipool(s)</Text> costs&nbsp;
+            Creating <Text strong>{numMinipools} {" "} {numMinipools === 1 ? "Minipool" : "Minipools"}</Text> costs&nbsp;
             <Text strong>{Number(formatEther(avaxAmount)).toLocaleString(undefined, {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })
             } AVAX</Text>. For a GGP Collateral
             Percentage of <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> you are required to
-            stake <Text strong>{formatEther(realGgpAmount)} GGP</Text>.
+            stake <Text strong>{Number(formatEther(realGgpAmount)).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            } GGP</Text>.
           </Paragraph>
           <Divider />
           <Paragraph>
@@ -97,7 +101,7 @@ export default function YourMinipoolResults({
               GGP Minipool
             </Text>
             <br></br>
-            <Text strong>{numMinipools} Minipool(s)</Text> at a Collateral Percentage of&nbsp;
+            <Text strong>{numMinipools} {" "} {numMinipools === 1 ? "Minipool" : "Minipools"}</Text> at a Collateral Percentage of&nbsp;
             <Text strong>{ggpCollatPercent.toFixed(1)}%</Text> will yield&nbsp;
             <Text strong>
               $
@@ -117,13 +121,13 @@ export default function YourMinipoolResults({
                 })}&nbsp;
               </Text>
             </Text>
-            from the <Tooltip title="as of 7/13/2023">current*</Tooltip> GGP base APY of <Text strong>{Number(formatEther(ggpMinipoolBaseApy.mul(100))).toFixed(2)}%</Text>. Which gives a total:&nbsp;
+            from the Avalanche Network at an APY of <Text strong>{Number(formatEther(ggpMinipoolBaseApy.mul(100))).toFixed(2)}%</Text>. Which gives a total:&nbsp;
             <Text strong style={{ color: "#5d43ef" }}>
               {Number(formatEther(ggpApy.mul(100))).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
-              % APY
+              % APY.
             </Text>
           </Paragraph>
           <Divider />
@@ -138,8 +142,8 @@ export default function YourMinipoolResults({
             <Text>
               Staking <Text strong>{
                 Number(formatEther(avaxAmount)).toLocaleString(undefined, {
-                  minimumFractionDigits: 1,
-                  maximumFractionDigits: 1,
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
                 })
               } AVAX</Text> on a traditional validator
               will yield&nbsp;
@@ -149,11 +153,10 @@ export default function YourMinipoolResults({
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}&nbsp;
-              </Text>&nbsp;
-              per&nbsp;
+              </Text>
             </Text>
-            year at the <Tooltip title="as of 7/13/2023">current*</Tooltip> validator total:&nbsp;
-            <Text style={{ color: "#e84142" }} strong>{formatEther(avaxValidatorBaseApy.mul(100))}% APY</Text>
+            per year at the validator total:&nbsp;
+            <Text style={{ color: "#e84142" }} strong>{formatEther(avaxValidatorBaseApy.mul(100))}% APY.</Text>
           </Paragraph>
         </Typography>
       </Col>

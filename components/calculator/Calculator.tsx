@@ -95,13 +95,14 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
     }
   }
 
-  function handleGgpStake(e: ChangeEvent<HTMLInputElement>) {
-    const ggp = e.target.value;
-    const newGgpAmount = parseEther(ggp || "0");
-    setGgpCollatPercent(
-      +formatEther(newGgpAmount.mul(ggpPriceInAvax).div(avaxAmount).mul(BigNumber.from(100)))
-    );
-    setRealGgpAmount(newGgpAmount);
+  function handleGgpStake(stake: number | null) {
+    if (stake) {
+      const newGgpAmount = parseEther(stake.toString() || "0");
+      setGgpCollatPercent(
+        +formatEther(newGgpAmount.mul(ggpPriceInAvax).div(avaxAmount).mul(BigNumber.from(100)))
+      );
+      setRealGgpAmount(newGgpAmount);
+    }
   }
 
   function handleCheck(e: CheckboxChangeEvent) {
@@ -201,8 +202,8 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
   return (
     <>
       <Space direction="vertical">
-        <Row justify="space-between" gutter={32}>
-          <Col lg={16} md={20}>
+        <Row>
+          <Col xxl={6} lg={8} xs={16}>
             <Title>Minipool Rewards Calculator</Title>
             <Typography>
               <Paragraph style={{ fontSize: 18 }}>
@@ -211,7 +212,9 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
               </Paragraph>
             </Typography>
           </Col>
-          <Col lg={8} md={20}>
+          <Col lg={2} sm={0} xs={0}>
+          </Col>
+          <Col xxl={6} lg={8} xs={14}>
             <ProtocolSettings
               ggpPriceInAvax={ggpPriceInAvax}
               setGgpPriceInAvax={setGgpPriceInAvax}
@@ -222,8 +225,8 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
             />
           </Col>
         </Row>
-        <Row gutter={32}>
-          <Col xl={12} lg={12} md={12} sm={24}>
+        <Row>
+          <Col xxl={6} lg={8} xs={16}>
             <YourMinipool
               numMinipools={numMinipools}
               avaxAmount={avaxAmount}
@@ -234,7 +237,9 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
               handleGgpStake={handleGgpStake}
             />
           </Col>
-          <Col xl={10} lg={12} md={12} sm={24}>
+          <Col lg={2} xs={0}>
+          </Col>
+          <Col xxl={8} lg={10} xs={20}>
             <YourMinipoolResults
               ggpCollatPercent={ggpCollatPercent}
               realGgpAmount={realGgpAmount}
@@ -254,7 +259,7 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
           checked={checked}
           title={"Retail Node Ops"}
           details={
-            "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards."
+            "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards. Including your minipool does not affect investor rewards."
           }
           ggpStaked={retailTegs}
           stakers={retailStakers}

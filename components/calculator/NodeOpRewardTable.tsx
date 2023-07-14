@@ -57,7 +57,7 @@ export function NodeOpRewardTable({
       ),
     },
     {
-      title: "GGP Reward",
+      title: "Monthly GGP Reward",
       dataIndex: "reward",
       key: "reward",
       render: (ggpReward: string) => (
@@ -65,7 +65,7 @@ export function NodeOpRewardTable({
       ),
     },
     {
-      title: "Reward amount in AVAX",
+      title: "Monthly Reward amount in AVAX",
       dataIndex: "avaxReward",
       key: "avaxReward",
       render: (avaxReward: string) => (
@@ -73,7 +73,7 @@ export function NodeOpRewardTable({
       ),
     },
     {
-      title: "Reward amount in USD",
+      title: "Monthly Reward amount in USD",
       dataIndex: "usdReward",
       key: "usdReward",
       render: (usdReward: string) => (
@@ -90,7 +90,7 @@ export function NodeOpRewardTable({
         </Col>
         <Col lg={8} md={10} sm={12}>
           <Title level={3}>
-            GGP Staked: {`${commify((+formatEther(ggpStaked)).toFixed(2))}`}
+            Effective GGP Staked: {`${commify((+formatEther(ggpStaked)).toFixed(2))}`}
           </Title>
         </Col>
         <Col lg={14} sm={20}>
