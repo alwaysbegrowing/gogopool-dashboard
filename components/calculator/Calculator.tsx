@@ -203,7 +203,9 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
     <>
       <Space direction="vertical">
         <Row>
-          <Col xxl={6} lg={8} xs={16}>
+          <Col xxl={4} lg={2}>
+          </Col>
+          <Col xxl={6} lg={8} sm={20} xs={24}>
             <Title>Minipool Rewards Calculator</Title>
             <Typography>
               <Paragraph style={{ fontSize: 18 }}>
@@ -212,9 +214,9 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
               </Paragraph>
             </Typography>
           </Col>
-          <Col lg={2} sm={0} xs={0}>
+          <Col lg={2} xs={0}>
           </Col>
-          <Col xxl={6} lg={8} xs={14}>
+          <Col xxl={6} lg={8} sm={16} xs={24}>
             <ProtocolSettings
               ggpPriceInAvax={ggpPriceInAvax}
               setGgpPriceInAvax={setGgpPriceInAvax}
@@ -226,7 +228,9 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
           </Col>
         </Row>
         <Row>
-          <Col xxl={6} lg={8} xs={16}>
+          <Col xxl={4} lg={2}>
+          </Col>
+          <Col xxl={6} lg={8} sm={16} xs={24}>
             <YourMinipool
               numMinipools={numMinipools}
               avaxAmount={avaxAmount}
@@ -239,7 +243,7 @@ export function Calculator({ stakers, currentGgpPriceInAvax, avaxPriceInUsd }: P
           </Col>
           <Col lg={2} xs={0}>
           </Col>
-          <Col xxl={8} lg={10} xs={20}>
+          <Col xxl={8} lg={10} sm={20} xs={24}>
             <YourMinipoolResults
               ggpCollatPercent={ggpCollatPercent}
               realGgpAmount={realGgpAmount}

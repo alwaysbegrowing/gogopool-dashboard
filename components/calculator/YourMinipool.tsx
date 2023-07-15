@@ -78,7 +78,9 @@ export function YourMinipool({
             onChange={handlePercentChange}
           />
         </Col>
-        <Col span={24}>
+        <Col span={1}>
+        </Col>
+        <Col span={21}>
           <Slider
             style={{ width: "100%" }}
             min={10}
