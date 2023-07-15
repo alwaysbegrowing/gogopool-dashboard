@@ -67,7 +67,9 @@ export function YourMinipool({
         {/*GGP*/}
         <Col span={24}>
           <Text strong>GGP Collateral Percentage &nbsp;</Text>
-          <Tooltip title={`(GGP Stake * GGP price) ÷ (AVAX Stake * AVAX Price) × 100`}>
+          <Tooltip
+            title={`(GGP Stake * GGP price) ÷ (AVAX Stake * AVAX Price) × 100`}
+          >
             <InfoCircleOutlined />
           </Tooltip>
           <InputNumber
@@ -90,6 +92,7 @@ export function YourMinipool({
               150: "150%",
             }}
             onChange={handlePercentChange}
+            value={ggpCollatPercent}
           />
         </Col>
         <Col span={24}>
