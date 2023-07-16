@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Statistic, Card, Space, Tooltip, Popover } from "antd";
+import { Col, Row, Statistic, Card, Space, Popover } from "antd";
 import { ArrowUpOutlined } from "@ant-design/icons";
 import NodesTable from "./NodesTable";
 import NodeOpsTable from "./NodeOpsTable";
