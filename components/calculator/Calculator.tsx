@@ -295,7 +295,7 @@ export function Calculator({
           </Col>
         </Row>
         <Row>
-          <Col xxl={6} lg={8} xs={16}>
+          <Col xxl={7} lg={9} md={16}>
             <YourMinipool
               numMinipools={numMinipools}
               avaxAmount={avaxAmount}

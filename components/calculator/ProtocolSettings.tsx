@@ -26,11 +26,11 @@ export function ProtocolSettings({
   };
 
   const setBoth = (e: ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
+    let value = e.target.value;
     const ggpInUsd = parseEther(value || "0");
     setGgpPriceInAvax(ggpInUsd.mul(weiValue).div(avaxPriceInUsd));
     setGgpPriceInUsd(ggpInUsd);
-  }
+  };
 
   return (
     <>
@@ -41,6 +41,7 @@ export function ProtocolSettings({
             <Input
               addonBefore="$"
               type="number"
+              step={0.1}
               value={+(+formatEther(ggpPriceInUsd)).toFixed(2)}
               onChange={setBoth}
             />
@@ -51,13 +52,17 @@ export function ProtocolSettings({
           <Text strong>Current Prices</Text>
           <Descriptions size="small" bordered>
             <Descriptions.Item label="AVAX">
-              ${Number(formatEther(avaxPriceInUsd)).toLocaleString(undefined, {
+              $
+              {Number(formatEther(avaxPriceInUsd)).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </Descriptions.Item>
             <Descriptions.Item label="GGP">
-              ${Number(formatEther(currentGgpPrice.mul(avaxPriceInUsd).div(weiValue))).toLocaleString(undefined, {
+              $
+              {Number(
+                formatEther(currentGgpPrice.mul(avaxPriceInUsd).div(weiValue))
+              ).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}

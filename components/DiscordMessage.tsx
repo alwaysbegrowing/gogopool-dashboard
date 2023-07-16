@@ -27,6 +27,8 @@ export default function DiscordMessage({ msg, timestamp }: any) {
           border: "none",
           whiteSpace: "pre-wrap",
           wordWrap: "break-word",
+          width: '300px',
+          height: '450px',
         }}
       >
         <div className="discord-message">
