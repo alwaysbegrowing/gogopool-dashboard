@@ -24,6 +24,7 @@ function createFormatter(date?: Date) {
 
   return (
     <Popover
+      placement="bottom"
       title={
         <Space direction="vertical">
           {fullDate}
