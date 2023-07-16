@@ -76,7 +76,9 @@ export default function Home() {
         .mul(1000)
         .toNumber()
     );
-
+console.log("minipoolCount", minipoolCount);
+console.log("totalStakedAMount", totalStakedAMount);
+console.log("ggpStaked", ggpStaked);
   return (
     <Layout>
       <Space direction="vertical" size="large">
