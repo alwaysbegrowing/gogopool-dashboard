@@ -108,7 +108,9 @@ export function YourMinipool({
             />
           </Space>
         </Col>
-        <Col span={24}>
+        <Col span={1}>
+        </Col>
+        <Col span={21}>
           <Slider
             min={10}
             style={{ width: "100%" }}
