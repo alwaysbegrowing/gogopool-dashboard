@@ -40,7 +40,7 @@ export function YourMinipool({
           <Col span={10}>
             <Space direction="vertical">
               <Space>
-                <Text strong>Number of Minipools</Text>
+                <Text strong>№ of Minipools</Text>
                 <Tooltip title="Number of Minipools You Wish to Create">
                   <InfoCircleOutlined />
                 </Tooltip>
@@ -108,8 +108,7 @@ export function YourMinipool({
             />
           </Space>
         </Col>
-        <Col span={1}>
-        </Col>
+        <Col span={1}></Col>
         <Col span={21}>
           <Slider
             min={10}
