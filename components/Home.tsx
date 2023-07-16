@@ -44,8 +44,9 @@ export default function Home() {
   const { data: rewardsCycleSeconds } = useGetRewardsCycleSeconds();
   const { data: rewardsEligibilityMinSeconds } =
     useGetRewardsEligibilityMinSeconds();
-  const [minipoolCount, totalStakedAMount] = data || [];
-  const [stakersCount, ggpStaked] = stakerData || [];
+  const [minipoolCount, totalStakedAMount] = data ?? [0, BigNumber.from(0)];
+  const [stakersCount, ggpStaked] = stakerData ?? [0, BigNumber.from(0)];
+
   if (!isMounted) return null;
   const rewardsCycleStartDate = rewardsCycleStartTime
     ? new Date(rewardsCycleStartTime.mul(1000).toNumber())
@@ -76,9 +77,6 @@ export default function Home() {
         .mul(1000)
         .toNumber()
     );
-console.log("minipoolCount", minipoolCount);
-console.log("totalStakedAMount", totalStakedAMount);
-console.log("ggpStaked", ggpStaked);
   return (
     <Layout>
       <Space direction="vertical" size="large">
