@@ -174,4 +174,4 @@ export const rewardsAbi = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;

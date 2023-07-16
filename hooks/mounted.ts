@@ -18,7 +18,7 @@ interface Mp {
 
 export const minipoolmanagerContract: Mp = {
   address: "0xc8de41c35fb389286546cf4107102a7656da7037",
-  abi: minipoolManagerAbi as any,
+  abi: minipoolManagerAbi,
 };
 
 export const stakingContract: Mp = {

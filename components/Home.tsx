@@ -14,8 +14,10 @@ import {
 } from "../hooks/mounted";
 import { toWei } from "../hooks/mounted";
 import { formatDistanceToNow, format } from "date-fns";
+import { BigNumber } from "ethers";
 
-function createFormatter(date) {
+function createFormatter(date?: Date) {
+  if (!date) return null;
   const formattedDistance = formatDistanceToNow(date, { addSuffix: true });
   const fullDate = `${format(date, "PPpp z")}`;
   const gmtDate = date.toUTCString();
@@ -48,20 +50,35 @@ export default function Home() {
     Intl.DateTimeFormat().resolvedOptions().timeZone
   } Time)`;
   if (!isMounted) return null;
-  const rewardsCycleStartDate = new Date(rewardsCycleStartTime * 1000);
-  const rewardsEligibilityDate = new Date(
-    (parseInt(rewardsCycleStartTime) + parseInt(rewardsEligibilityMinSeconds)) *
-      1000
-  );
-  const rewardsCycleEndDate = new Date(
-    (parseInt(rewardsCycleStartTime) + parseInt(rewardsCycleSeconds)) * 1000
-  );
-  const nextRewardsEligibilityDate = new Date(
-    (parseInt(rewardsCycleStartTime) +
-      parseInt(rewardsCycleSeconds) +
-      parseInt(rewardsEligibilityMinSeconds)) *
-      1000
-  );
+  const rewardsCycleStartDate = rewardsCycleStartTime
+    ? new Date(rewardsCycleStartTime.mul(1000).toNumber())
+    : new Date();
+  const rewardsEligibilityDate =
+    rewardsCycleStartTime &&
+    rewardsEligibilityMinSeconds &&
+    new Date(
+      rewardsCycleStartTime
+        .add(rewardsEligibilityMinSeconds)
+        .mul(1000)
+        .toNumber()
+    );
+  const rewardsCycleEndDate =
+    rewardsCycleStartTime &&
+    rewardsCycleSeconds &&
+    new Date(
+      rewardsCycleStartTime.add(rewardsCycleSeconds).mul(1000).toNumber()
+    );
+  const nextRewardsEligibilityDate =
+    rewardsCycleStartTime &&
+    rewardsCycleSeconds &&
+    rewardsEligibilityMinSeconds &&
+    new Date(
+      rewardsCycleStartTime
+        .add(rewardsCycleSeconds)
+        .add(rewardsEligibilityMinSeconds)
+        .mul(1000)
+        .toNumber()
+    );
 
   return (
     <Layout>
@@ -73,20 +90,21 @@ export default function Home() {
                 title="Active Minipools"
                 prefix={<ArrowUpOutlined />}
                 valueStyle={{ color: "#3f8600" }}
-                value={minipoolCount?.toNumber()}
+                formatter={(value) => value}
+                value={(minipoolCount as BigNumber).toString()}
               />
             </Card>
           </Col>
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
-              <Statistic title="Total Stakers" value={stakersCount} />
+              <Statistic title="Total Stakers" value={stakersCount as any} />
             </Card>
           </Col>
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
                 title="AVAX Staked"
-                value={toWei(totalStakedAMount)}
+                value={toWei(totalStakedAMount as BigNumber)}
                 precision={0}
               />
             </Card>
@@ -96,7 +114,7 @@ export default function Home() {
             <Card loading={isLoading} bordered={false}>
               <Statistic
                 title="GGP Staked"
-                value={toWei(ggpStaked)}
+                value={toWei(ggpStaked as BigNumber)}
                 precision={0}
               />
             </Card>
@@ -104,7 +122,7 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title={`Rewards Cycle Start ${timezoneDisplay}`}
+                title={`Rewards Cycle Start`}
                 formatter={() => createFormatter(rewardsCycleStartDate)}
                 precision={0}
               />
@@ -113,7 +131,7 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title={`Rewards Eligibility ${timezoneDisplay}`}
+                title={`Rewards Eligibility`}
                 formatter={() => createFormatter(rewardsEligibilityDate)}
                 precision={0}
               />
@@ -122,7 +140,7 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title={`Rewards Cycle End ${timezoneDisplay}`}
+                title={`Rewards Cycle End`}
                 formatter={() => createFormatter(rewardsCycleEndDate)}
                 precision={0}
               />
@@ -131,7 +149,7 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title={`Next Rewards Eligibility ${timezoneDisplay}`}
+                title={`Next Rewards Eligibility`}
                 formatter={() => createFormatter(nextRewardsEligibilityDate)}
                 precision={0}
               />
