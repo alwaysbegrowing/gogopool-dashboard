@@ -46,9 +46,6 @@ export default function Home() {
     useGetRewardsEligibilityMinSeconds();
   const [minipoolCount, totalStakedAMount] = data || [];
   const [stakersCount, ggpStaked] = stakerData || [];
-  const timezoneDisplay = `(${
-    Intl.DateTimeFormat().resolvedOptions().timeZone
-  } Time)`;
   if (!isMounted) return null;
   const rewardsCycleStartDate = rewardsCycleStartTime
     ? new Date(rewardsCycleStartTime.mul(1000).toNumber())
@@ -91,7 +88,7 @@ export default function Home() {
                 prefix={<ArrowUpOutlined />}
                 valueStyle={{ color: "#3f8600" }}
                 formatter={(value) => value}
-                value={(minipoolCount as BigNumber).toString()}
+                value={(minipoolCount as any as BigNumber).toString()}
               />
             </Card>
           </Col>
@@ -104,7 +101,7 @@ export default function Home() {
             <Card loading={isLoading} bordered={false}>
               <Statistic
                 title="AVAX Staked"
-                value={toWei(totalStakedAMount as BigNumber)}
+                value={toWei(totalStakedAMount as any as BigNumber)}
                 precision={0}
               />
             </Card>
@@ -114,7 +111,7 @@ export default function Home() {
             <Card loading={isLoading} bordered={false}>
               <Statistic
                 title="GGP Staked"
-                value={toWei(ggpStaked as BigNumber)}
+                value={toWei(ggpStaked as any as BigNumber)}
                 precision={0}
               />
             </Card>
