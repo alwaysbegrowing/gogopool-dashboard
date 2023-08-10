@@ -1,7 +1,7 @@
 import { toWei, weiValue } from "@/hooks/mounted";
 import { Col, Divider, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
@@ -93,7 +93,7 @@ export function Calculator({
           .mul(parseEther((ggpCollatPercent / 100).toString()))
       );
     }
-  }, [ggpPriceInAvax, ggpCollatPercent, avaxAmount]);
+  }, [ggpPriceInAvax, avaxAmount]);
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -122,6 +122,7 @@ export function Calculator({
         setRealGgpAmount(BigNumber.from(0));
         return;
       }
+
       setRealGgpAmount(
         avaxAmount
           .div(ggpPriceInAvax)
@@ -132,16 +133,27 @@ export function Calculator({
 
   function handleGgpStake(stake: number | null) {
     if (stake) {
-      const newGgpAmount = parseEther(stake.toString() || "0");
-      setGgpCollatPercent(
+      let newGgpAmount = parseEther(stake.toString() || "0");
+      let newCollatPercent =
         +formatEther(
           newGgpAmount
             .mul(ggpPriceInAvax)
             .div(avaxAmount)
             .mul(BigNumber.from(100))
         )
-      );
+
+      // Greater than 150% collateral is not counted towards rewards in the gogopool protocol
+      if (newCollatPercent > 150) {
+        newCollatPercent = 150
+        newGgpAmount = BigNumber.from(newCollatPercent).mul(avaxAmount).div(ggpPriceInAvax).div(100).mul(weiValue)
+      }
+      // A minipool cannot be started with less than 10% collateral
+      if (newCollatPercent < 10) {
+        newCollatPercent = 10
+        newGgpAmount = BigNumber.from(newCollatPercent).mul(avaxAmount).div(ggpPriceInAvax).div(100).mul(weiValue)
+      }
       setRealGgpAmount(newGgpAmount);
+      setGgpCollatPercent(newCollatPercent);
     }
   }
 
