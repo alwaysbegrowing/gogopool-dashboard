@@ -142,12 +142,12 @@ export function Calculator({
             .mul(BigNumber.from(100))
         )
 
-      // Greater than 150% collateral is not counted towards rewards in gogopool protocol
+      // Greater than 150% collateral is not counted towards rewards in the gogopool protocol
       if (newCollatPercent > 150) {
         newCollatPercent = 150
         newGgpAmount = BigNumber.from(newCollatPercent).mul(avaxAmount).div(ggpPriceInAvax).div(100).mul(weiValue)
       }
-      // A minipoll cannot be started with less than 10% collateral
+      // A minipool cannot be started with less than 10% collateral
       if (newCollatPercent < 10) {
         newCollatPercent = 10
         newGgpAmount = BigNumber.from(newCollatPercent).mul(avaxAmount).div(ggpPriceInAvax).div(100).mul(weiValue)
