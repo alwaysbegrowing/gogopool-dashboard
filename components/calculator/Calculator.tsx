@@ -1,7 +1,7 @@
 import { toWei, weiValue } from "@/hooks/mounted";
 import { Col, Divider, Row, Space, Typography } from "antd";
 import { BigNumber } from "ethers";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NodeOpRewardTable } from "./NodeOpRewardTable";
 import { RatioRewardsTable } from "./RatioRewardsTable";
 import { formatEther, parseEther } from "ethers/lib/utils.js";
@@ -93,7 +93,7 @@ export function Calculator({
           .mul(parseEther((ggpCollatPercent / 100).toString()))
       );
     }
-  }, [ggpPriceInAvax, ggpCollatPercent, avaxAmount]);
+  }, [ggpPriceInAvax, avaxAmount]);
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -133,15 +133,18 @@ export function Calculator({
   function handleGgpStake(stake: number | null) {
     if (stake) {
       const newGgpAmount = parseEther(stake.toString() || "0");
-      setGgpCollatPercent(
+      const newCollatPercent =
         +formatEther(
           newGgpAmount
             .mul(ggpPriceInAvax)
             .div(avaxAmount)
             .mul(BigNumber.from(100))
         )
-      );
+      if (newCollatPercent < 10 || newCollatPercent > 150) {
+        return
+      }
       setRealGgpAmount(newGgpAmount);
+      setGgpCollatPercent(newCollatPercent);
     }
   }
 
