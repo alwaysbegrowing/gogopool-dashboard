@@ -23,7 +23,7 @@ export interface Staker {
   inUsd: BigNumber;
   lastRewardsCycleCompleted: BigNumber;
   percentStake: BigNumber;
-  reward: BigNumber;
+  ggpReward: BigNumber;
   rewardsStartTime: BigNumber;
   stakerAddr: `0x${string}`;
   key: string,

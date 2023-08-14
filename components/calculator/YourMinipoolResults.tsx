@@ -29,6 +29,14 @@ export default function YourMinipoolResults({
   const avaxValidatorBaseApy = parseEther("0.0798");
   const ggpMinipoolBaseApy = parseEther("0.075");
 
+  const avaxStakedInGGP = avaxAmount.mul(weiValue).div(ggpPriceInAvax)
+  const ggpSpent = avaxStakedInGGP.add(realGgpAmount)
+  const ggpApy = rewardAmounts.ggpReward
+    .mul(weiValue)
+    .div(ggpSpent)
+    .mul(12)
+    .add(ggpMinipoolBaseApy)
+
   const ggpRewardPerYearInUsd = rewardAmounts.usdReward.mul(12);
   const minipoolYearlyRewardsInAvax = avaxPriceInUsd
     .mul(ggpMinipoolBaseApy)
@@ -41,23 +49,6 @@ export default function YourMinipoolResults({
     .div(weiValue)
     .mul(avaxAmount)
     .div(weiValue);
-
-  Number(formatEther(rewardAmounts.usdReward.mul(12))).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  const avaxAmountInUsd = avaxAmount.mul(avaxPriceInUsd).div(weiValue);
-  const ggpAmountInUsd = realGgpAmount
-    .mul(ggpPriceInAvax)
-    .div(weiValue)
-    .mul(avaxPriceInUsd)
-    .div(weiValue);
-
-  const inputAmount = avaxAmountInUsd.add(ggpAmountInUsd);
-  const outputAmount = ggpRewardPerYearInUsd.add(minipoolYearlyRewardsInAvax);
-
-  const ggpApy = outputAmount.mul(weiValue).div(inputAmount);
 
   return (
     <>

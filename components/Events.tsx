@@ -27,8 +27,7 @@ export function Events() {
     async function getMessages() {
       setEvents({ messages: [], loading: true });
       const response = await fetch(
-        `/api/discord/messages?limit=${limit || 1000}&page=${page || 1}&owner=${
-          owner || ""
+        `/api/discord/messages?limit=${limit || 1000}&page=${page || 1}&owner=${owner || ""
         }`
       )
         .then((res) => res.json())

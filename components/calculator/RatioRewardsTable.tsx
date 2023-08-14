@@ -1,8 +1,10 @@
 import { Col, Table, Typography } from "antd";
 import { commify, formatEther } from "ethers/lib/utils.js";
 import { useState } from "react";
+import { RewardAmount } from "./Calculator";
+import { BigNumber } from "ethers";
 
-export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
+export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: RewardAmount }) {
   const [show, setShow] = useState(false);
   const { Title, Paragraph, Text } = Typography;
   const rewardsColumns = [
@@ -15,31 +17,31 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
       title: "Effective GGP Staked",
       dataIndex: "ggpStake",
       key: "ggpStake",
-      render: (ggpStake: string) => <>{`${commify((+formatEther(ggpStake)).toFixed(2))}`}</>,
+      render: (ggpStake: BigNumber) => <>{`${commify((+formatEther(ggpStake)).toFixed(2))}`}</>,
     },
     {
       title: "Share of All GGP Staked",
       dataIndex: "percentStake",
       key: "percentStake",
-      render: (percentStake: string) => <>{`${(+formatEther(percentStake) * 100).toFixed(2)}%`}</>,
+      render: (percentStake: BigNumber) => <>{`${(+formatEther(percentStake) * 100).toFixed(2)}%`}</>,
     },
     {
       title: "Monthly GGP Reward",
-      dataIndex: "reward",
-      key: "reward",
-      render: (ggpReward: string) => <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>,
+      dataIndex: "ggpReward",
+      key: "ggpReward",
+      render: (ggpReward: BigNumber) => <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>,
     },
     {
       title: "Monthly Reward amount in AVAX",
       dataIndex: "avaxReward",
       key: "avaxReward",
-      render: (avaxReward: string) => <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>,
+      render: (avaxReward: BigNumber) => <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>,
     },
     {
       title: "Monthly Reward amount in USD",
       dataIndex: "usdReward",
       key: "usdReward",
-      render: (usdReward: string) => <>{`$${commify((+formatEther(usdReward)).toFixed(2))}`}</>,
+      render: (usdReward: BigNumber) => <>{`$${commify((+formatEther(usdReward)).toFixed(2))}`}</>,
     },
   ];
 
