@@ -43,7 +43,7 @@ const App: React.FC = () => {
           }}
         />
         <Column
-          title="GGP Staked"
+          title="PPY Staked"
           dataIndex="6"
           key="1"
           render={(n) => {
@@ -60,7 +60,7 @@ const App: React.FC = () => {
           }}
         />
         {/* <Column
-        title="Liquid Staker Avax"
+        title="Liquid Staker PLS"
         dataIndex="9"
         key="2"
         render={(n) => {

@@ -7,33 +7,33 @@ export function RatioRewardsTable({ rewardAmounts }: { rewardAmounts: any }) {
   const { Title, Paragraph, Text } = Typography;
   const rewardsColumns = [
     {
-      title: "GGP Collateralization",
+      title: "PPY Collateralization",
       dataIndex: "collateralRatioString",
       key: "collateralRatioString",
     },
     {
-      title: "Effective GGP Staked",
-      dataIndex: "ggpStake",
-      key: "ggpStake",
-      render: (ggpStake: string) => <>{`${commify((+formatEther(ggpStake)).toFixed(2))}`}</>,
+      title: "Effective PPY Staked",
+      dataIndex: "PPYStake",
+      key: "PPYStake",
+      render: (PPYStake: string) => <>{`${commify((+formatEther(PPYStake)).toFixed(2))}`}</>,
     },
     {
-      title: "Share of All GGP Staked",
+      title: "Share of All PPY Staked",
       dataIndex: "percentStake",
       key: "percentStake",
       render: (percentStake: string) => <>{`${(+formatEther(percentStake) * 100).toFixed(2)}%`}</>,
     },
     {
-      title: "Monthly GGP Reward",
+      title: "Monthly PPY Reward",
       dataIndex: "reward",
       key: "reward",
-      render: (ggpReward: string) => <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>,
+      render: (PPYReward: string) => <>{`${commify((+formatEther(PPYReward)).toFixed(2))}`}</>,
     },
     {
-      title: "Monthly Reward amount in AVAX",
-      dataIndex: "avaxReward",
-      key: "avaxReward",
-      render: (avaxReward: string) => <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>,
+      title: "Monthly Reward amount in PLS",
+      dataIndex: "PLSReward",
+      key: "PLSReward",
+      render: (PLSReward: string) => <>{`${commify((+formatEther(PLSReward)).toFixed(2))}`}</>,
     },
     {
       title: "Monthly Reward amount in USD",

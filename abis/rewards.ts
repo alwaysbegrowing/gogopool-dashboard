@@ -43,7 +43,7 @@ export const rewardsAbi = [
         type: "uint256",
       },
     ],
-    name: "GGPInflated",
+    name: "PPYInflated",
     type: "event",
   },
   {

@@ -100,7 +100,7 @@ export const protocolDaoAbi = [
   },
   {
     inputs: [],
-    name: "getExpectedAVAXRewardsRate",
+    name: "getExpectedPLSRewardsRate",
     outputs: [
       {
         internalType: "uint256",
@@ -204,7 +204,7 @@ export const protocolDaoAbi = [
   },
   {
     inputs: [],
-    name: "getMinipoolMaxAVAXAssignment",
+    name: "getMinipoolMaxPLSAssignment",
     outputs: [
       {
         internalType: "uint256",
@@ -230,7 +230,7 @@ export const protocolDaoAbi = [
   },
   {
     inputs: [],
-    name: "getMinipoolMinAVAXAssignment",
+    name: "getMinipoolMinPLSAssignment",
     outputs: [
       {
         internalType: "uint256",
@@ -243,7 +243,7 @@ export const protocolDaoAbi = [
   },
   {
     inputs: [],
-    name: "getMinipoolMinAVAXStakingAmt",
+    name: "getMinipoolMinPLSStakingAmt",
     outputs: [
       {
         internalType: "uint256",
@@ -308,7 +308,7 @@ export const protocolDaoAbi = [
   },
   {
     inputs: [],
-    name: "getTargetGGAVAXReserveRate",
+    name: "getTargetstPLSReserveRate",
     outputs: [
       {
         internalType: "uint256",
@@ -396,7 +396,7 @@ export const protocolDaoAbi = [
         type: "uint256",
       },
     ],
-    name: "setExpectedAVAXRewardsRate",
+    name: "setExpectedPLSRewardsRate",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

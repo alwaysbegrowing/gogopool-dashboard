@@ -1,7 +1,7 @@
 import React from "react";
 import CustomLayout from "@/components/Layout/Layout";
 import { Calculator } from "@/components/calculator/Calculator";
-import { useGetGGPPriceInAVAX, useStakers } from "@/hooks/mounted";
+import { useGetPPYPriceInPLS, useStakers } from "@/hooks/mounted";
 import { BigNumber } from "ethers";
 import axios from "axios";
 import { parseEther } from "ethers/lib/utils.js";
@@ -9,17 +9,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 
 export interface Staker {
-  avaxAssigned: BigNumber;
-  avaxStaked: BigNumber;
-  avaxValidating: BigNumber;
-  avaxValidatingHighWater: BigNumber;
+  PLSAssigned: BigNumber;
+  PLSStaked: BigNumber;
+  PLSValidating: BigNumber;
+  PLSValidatingHighWater: BigNumber;
   collateralRatio: BigNumber;
-  effectiveGgpStaked: BigNumber;
-  ggpLockedUntil: BigNumber;
-  ggpRewards: BigNumber;
-  ggpStake: BigNumber;
-  ggpStaked: BigNumber;
-  inAvax: BigNumber;
+  effectivePPYStaked: BigNumber;
+  PPYLockedUntil: BigNumber;
+  PPYRewards: BigNumber;
+  PPYStake: BigNumber;
+  PPYStaked: BigNumber;
+  inPLS: BigNumber;
   inUsd: BigNumber;
   lastRewardsCycleCompleted: BigNumber;
   percentStake: BigNumber;
@@ -28,30 +28,30 @@ export interface Staker {
   stakerAddr: `0x${string}`;
   key: string,
   usdReward: BigNumber,
-  avaxReward: BigNumber,
+  PLSReward: BigNumber,
 }
 
 const App = () => {
   const { data: stakers, isLoading: stakersLoading } = useStakers();
-  const { data: currentGgpPriceInAvax, isLoading: ggpPriceLoading } = useGetGGPPriceInAVAX();
-  const { data: avaxPriceInUsd, isLoading: avaxPriceLoading } = useQuery<BigNumber>({
-    queryKey: ["avax_price"],
+  const { data: currentPPYPriceInPLS, isLoading: PPYPriceLoading } = useGetPPYPriceInPLS();
+  const { data: PLSPriceInUsd, isLoading: PLSPriceLoading } = useQuery<BigNumber>({
+    queryKey: ["PLS_price"],
     queryFn: () =>
       axios
-        .get("https://www.jsonbateman.com/avax_price")
+        .get("https://www.jsonbateman.com/PLS_price")
         .then((res) => parseEther(res.data.price.toString()))
   });
 
   return (
     <CustomLayout>
-      {(stakersLoading || ggpPriceLoading || avaxPriceLoading) && (<Spin />)}
-      {(!stakers || !currentGgpPriceInAvax || !avaxPriceInUsd)
+      {(stakersLoading || PPYPriceLoading || PLSPriceLoading) && (<Spin />)}
+      {(!stakers || !currentPPYPriceInPLS || !PLSPriceInUsd)
         ? null
         : (
           <Calculator
             stakers={stakers as Staker[]}
-            currentGgpPriceInAvax={currentGgpPriceInAvax}
-            avaxPriceInUsd={avaxPriceInUsd}
+            currentPPYPriceInPLS={currentPPYPriceInPLS}
+            PLSPriceInUsd={PLSPriceInUsd}
           />
         )}
     </CustomLayout>

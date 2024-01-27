@@ -21,7 +21,7 @@ import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 
 export function NodeOpRewardTable({
   title,
-  ggpStaked,
+  PPYStaked,
   stakers,
   handleCheck,
   details,
@@ -29,7 +29,7 @@ export function NodeOpRewardTable({
 }: {
   title: "Retail Node Ops" | "Investor Node Ops";
   details: string;
-  ggpStaked: BigNumber;
+  PPYStaked: BigNumber;
   stakers: Staker[];
   checked: boolean;
   handleCheck: (e: CheckboxChangeEvent) => void;
@@ -127,11 +127,11 @@ export function NodeOpRewardTable({
       render: (stakerAddr: string) => <CopyableAddress address={stakerAddr} />,
     },
     {
-      title: "Effective GGP Staked",
-      dataIndex: "ggpStake",
-      key: "ggpStake",
-      render: (ggpStake: string) => (
-        <>{`${commify((+formatEther(ggpStake)).toFixed(2))}`}</>
+      title: "Effective PPY Staked",
+      dataIndex: "PPYStake",
+      key: "PPYStake",
+      render: (PPYStake: string) => (
+        <>{`${commify((+formatEther(PPYStake)).toFixed(2))}`}</>
       ),
     },
     {
@@ -143,7 +143,7 @@ export function NodeOpRewardTable({
       ),
     },
     {
-      title: "Share of All GGP Staked",
+      title: "Share of All PPY Staked",
       dataIndex: "percentStake",
       key: "percentStake",
       render: (percentStake: string) => (
@@ -151,19 +151,19 @@ export function NodeOpRewardTable({
       ),
     },
     {
-      title: "Monthly GGP Reward",
+      title: "Monthly PPY Reward",
       dataIndex: "reward",
       key: "reward",
-      render: (ggpReward: string) => (
-        <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>
+      render: (PPYReward: string) => (
+        <>{`${commify((+formatEther(PPYReward)).toFixed(2))}`}</>
       ),
     },
     {
-      title: "Monthly Reward amount in AVAX",
-      dataIndex: "avaxReward",
-      key: "avaxReward",
-      render: (avaxReward: string) => (
-        <>{`${commify((+formatEther(avaxReward)).toFixed(2))}`}</>
+      title: "Monthly Reward amount in PLS",
+      dataIndex: "PLSReward",
+      key: "PLSReward",
+      render: (PLSReward: string) => (
+        <>{`${commify((+formatEther(PLSReward)).toFixed(2))}`}</>
       ),
     },
     {
@@ -184,8 +184,8 @@ export function NodeOpRewardTable({
         </Col>
         <Col lg={8} md={10} sm={12}>
           <Title level={3}>
-            Effective GGP Staked:{" "}
-            {`${commify((+formatEther(ggpStaked)).toFixed(2))}`}
+            Effective PPY Staked:{" "}
+            {`${commify((+formatEther(PPYStaked)).toFixed(2))}`}
           </Title>
         </Col>
         <Col lg={14} sm={20}>

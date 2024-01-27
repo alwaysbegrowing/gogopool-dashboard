@@ -33,7 +33,7 @@ export default async function handler(
   const limit = parseInt((req.query.limit || "10") as string);
   const uri = process.env.MONGODB_URI || "";
   const client = new MongoClient(uri, {});
-  const db = client.db("gogopool");
+  const db = client.db("ProjectHub");
 
   const filter = componentFilter(owner);
   const count = await db.collection("events").countDocuments(filter);

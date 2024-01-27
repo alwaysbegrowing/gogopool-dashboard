@@ -71,8 +71,8 @@ export default function CustomLayout({
         <Space size="large">
           <Link href="/">
             <img
-              src="https://miro.medium.com/v2/resize:fill:176:176/1*DkTmcsAk4ARPrWCrXZH20Q.png"
-              alt="GoGoPool Logo"
+              src="https://ibb.co/QQ13zpF"
+              alt="ProjectHub Logo"
               style={{
                 color: "red",
                 marginTop: "18px",
@@ -93,7 +93,7 @@ export default function CustomLayout({
           <Button
             size="large"
             type="ghost"
-            href="https://github.com/alwaysbegrowing/gogopool-dashboard"
+            href="https://github.com/alwaysbegrowing/ProjectHub-dashboard"
             icon={<GithubOutlined />}
           ></Button>
         </Space>

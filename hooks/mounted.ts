@@ -43,7 +43,7 @@ export const useMinipools = () => {
       },
       {
         ...minipoolmanagerContract,
-        functionName: "getTotalAVAXLiquidStakerAmt",
+        functionName: "getTotalPLSLiquidStakerAmt",
       },
       {
         ...minipoolmanagerContract,
@@ -76,7 +76,7 @@ export const useStakingInfo = () => {
       },
       {
         ...stakingContract,
-        functionName: "getTotalGGPStake",
+        functionName: "getTotalPPYStake",
       },
     ],
   });
@@ -114,11 +114,11 @@ export const useGetRewardsCycleStartTime = () => {
 };
 
 
-export const useGetGGPPriceInAVAX = () => {
+export const useGetPPYPriceInPLS = () => {
   const { data, isLoading } = useContractRead({
     abi: oracleAbi,
     address: "0x30fb915258D844E9dC420B2C3AA97420AEA16Db7",
-    functionName: "getGGPPriceInAVAX",
+    functionName: "getPPYPriceInPLS",
   });
   return { data: data?.price, isLoading };
 };
