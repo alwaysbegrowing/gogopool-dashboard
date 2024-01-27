@@ -14,27 +14,27 @@ import { formatEther } from "ethers/lib/utils.js";
 
 export function YourMinipool({
   numMinipools,
-  avaxAmount,
-  ggpCollatPercent,
-  realGgpAmount,
+  PLSAmount,
+  PPYCollatPercent,
+  realPPYAmount,
   handleMinipoolChange,
   handlePercentChange,
-  handleGgpStake,
+  handlePPYStake,
 }: {
   numMinipools: number;
-  avaxAmount: BigNumber;
-  ggpCollatPercent: number;
-  realGgpAmount: BigNumber;
+  PLSAmount: BigNumber;
+  PPYCollatPercent: number;
+  realPPYAmount: BigNumber;
   handleMinipoolChange: (minipools: number | null) => void;
   handlePercentChange: (percent: number | null) => void;
-  handleGgpStake: (stake: number | null) => void;
+  handlePPYStake: (stake: number | null) => void;
 }) {
   const { Text, Title } = Typography;
 
   return (
     <>
       <Title level={3}>Your Minipool</Title>
-      {/*AVAX*/}
+      {/*PLS*/}
       <Row gutter={[0, 8]} justify="start">
         <Row>
           <Col span={10}>
@@ -54,7 +54,7 @@ export function YourMinipool({
             </Space>
           </Col>
           <Col span={4}>
-            <Tooltip title="The number of minipools and amount of AVAX staked is linked together.">
+            <Tooltip title="The number of minipools and amount of PLS staked is linked together.">
               <LinkOutlined
                 style={{
                   marginTop: "32px",
@@ -70,15 +70,15 @@ export function YourMinipool({
           <Col span={10}>
             <Space direction="vertical">
               <Space>
-                <Text strong>AVAX Staked</Text>
-                <Tooltip title="Always 1000 AVAX per minipool">
+                <Text strong>PLS Staked</Text>
+                <Tooltip title="Always 1000 PLS per minipool">
                   <InfoCircleOutlined />
                 </Tooltip>
               </Space>
               <InputNumber
                 style={{ width: "100%" }}
-                addonAfter="AVAX"
-                value={Number(formatEther(avaxAmount))}
+                addonAfter="PLS"
+                value={Number(formatEther(PLSAmount))}
                 disabled
               />
             </Space>
@@ -88,20 +88,20 @@ export function YourMinipool({
         <Col span={24}>
           <Divider />
         </Col>
-        {/*GGP*/}
+        {/*PPY*/}
         <Col span={24}>
           <Space direction="vertical">
             <Space>
-              <Text strong>GGP Collateral Percentage</Text>
+              <Text strong>PPY Collateral Percentage</Text>
               <Tooltip
-                title={`(GGP Stake * GGP price) ÷ (AVAX Stake * AVAX Price) × 100`}
+                title={`(PPY Stake * PPY price) ÷ (PLS Stake * PLS Price) × 100`}
               >
                 <InfoCircleOutlined />
               </Tooltip>
             </Space>
             <InputNumber
               style={{ width: "100%" }}
-              value={Number(ggpCollatPercent.toFixed(1))}
+              value={Number(PPYCollatPercent.toFixed(1))}
               type="number"
               addonAfter={"%"}
               onChange={handlePercentChange}
@@ -121,23 +121,23 @@ export function YourMinipool({
               150: "150%",
             }}
             onChange={handlePercentChange}
-            value={ggpCollatPercent}
+            value={PPYCollatPercent}
           />
         </Col>
         <Col span={24}>
           <Space direction="vertical">
             <Space>
-              <Text strong>GGP Stake</Text>
-              <Tooltip title="GGP stake needed to reach collateral percentage">
+              <Text strong>PPY Stake</Text>
+              <Tooltip title="PPY stake needed to reach collateral percentage">
                 <InfoCircleOutlined />
               </Tooltip>
             </Space>
             <InputNumber
               style={{ width: "100%" }}
-              value={Number(formatEther(realGgpAmount))}
-              addonAfter={"GGP"}
+              value={Number(formatEther(realPPYAmount))}
+              addonAfter={"PPY"}
               type="number"
-              onChange={handleGgpStake}
+              onChange={handlePPYStake}
             />
           </Space>
         </Col>

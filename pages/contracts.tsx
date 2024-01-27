@@ -49,11 +49,11 @@ const data = [
     address: "0xd45Cb6F5AcA41AfAAAeBdBE4EFBA49c1bC41E6BA",
   },
   {
-    contract: "TokenGGP",
+    contract: "TokenPPY",
     address: "0x69260B9483F9871ca57f81A90D91E2F96c2Cd11d",
   },
   {
-    contract: "TokenggAVAX",
+    contract: "TokenstPLS",
     address: "0xA25EaF2906FA1a3a13EdAc9B9657108Af7B703e3",
   },
   {
@@ -85,7 +85,7 @@ const columns = [
 
 const ContractTable = () => {
   return (
-    <Card title="GoGoPool Contracts">
+    <Card title="ProjectHub Contracts">
       <Table
         size="small"
         pagination={{ pageSize: 50 }}

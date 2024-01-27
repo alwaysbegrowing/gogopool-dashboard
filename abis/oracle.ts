@@ -22,7 +22,7 @@ export const oracleAbi = [
   },
   {
     inputs: [],
-    name: "InvalidGGPPrice",
+    name: "InvalidPPYPrice",
     type: "error",
   },
   {
@@ -66,12 +66,12 @@ export const oracleAbi = [
         type: "uint256",
       },
     ],
-    name: "GGPPriceUpdated",
+    name: "PPYPriceUpdated",
     type: "event",
   },
   {
     inputs: [],
-    name: "getGGPPriceInAVAX",
+    name: "getPPYPriceInPLS",
     outputs: [
       {
         internalType: "uint256",
@@ -89,7 +89,7 @@ export const oracleAbi = [
   },
   {
     inputs: [],
-    name: "getGGPPriceInAVAXFromTWAP",
+    name: "getPPYPriceInPLSFromTWAP",
     outputs: [
       {
         internalType: "uint256",
@@ -118,7 +118,7 @@ export const oracleAbi = [
         type: "uint256",
       },
     ],
-    name: "setGGPPriceInAVAX",
+    name: "setPPYPriceInPLS",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

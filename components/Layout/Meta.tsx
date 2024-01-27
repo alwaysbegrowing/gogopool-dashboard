@@ -26,8 +26,8 @@ export const Manifest = () => {
         href="/meta/safari-pinned-tab.svg"
         color="#7aa332"
       />
-      <meta name="apple-mobile-web-app-title" content="GoGoPool" />
-      <meta name="application-name" content="GoGoPool" />
+      <meta name="apple-mobile-web-app-title" content="ProjectHub" />
+      <meta name="application-name" content="ProjectHub" />
       <meta name="msapplication-TileColor" content="#2b5797" />
       <meta name="theme-color" content="#232323" />
     </Head>
@@ -43,31 +43,31 @@ export const Description = () => {
         name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
       />
-      <title itemProp="name">GoGoPool Dashboard </title>
+      <title itemProp="name">ProjectHub Dashboard </title>
       <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
       <meta
         name="description"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
       <meta
         name="keywords"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
 
-      <meta name="subject" content="GoGoPool Dashboard" />
+      <meta name="subject" content="ProjectHub Dashboard" />
       <meta
         name="pagename"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
-      <meta name="copyright" content="GoGoPool" />
+      <meta name="copyright" content="ProjectHub" />
       <meta
         name="abstract"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
       <meta name="topic" content="Metric Dashboard" />
       <meta
         name="summary"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
 
       <meta name="renderer" content="webkit" />
@@ -75,12 +75,12 @@ export const Description = () => {
       <meta content="origin" id="mref" name="referrer" />
 
       <meta name="Classification" content="Technology" />
-      <meta name="designer" content="GoGoPool Design Team" />
-      <meta name="reply-to" content="support@GoGoPool.com" />
-      <meta name="owner" content="GoGoPool" />
+      <meta name="designer" content="ProjectHub Design Team" />
+      <meta name="reply-to" content="support@ProjectHub.com" />
+      <meta name="owner" content="ProjectHub" />
 
-      <meta name="url" content="https://GoGoPool.network" />
-      <meta name="identifier-URL" content="https://GoGoPool.network" />
+      <meta name="url" content="https://ProjectHub.network" />
+      <meta name="identifier-URL" content="https://ProjectHub.network" />
 
       <meta name="directory" content="submission" />
       <meta name="category" content="Technology" />
@@ -92,26 +92,26 @@ export const Description = () => {
       <meta name="revised" content={Date.now().toLocaleString()} />
       <meta name="revisit-after" content="7 days" />
 
-      <meta name="author" content="GoGoPool Team" />
-      <meta name="generator" content="GoGoPool" />
+      <meta name="author" content="ProjectHub Team" />
+      <meta name="generator" content="ProjectHub" />
 
       <meta name="target" content="all" />
 
-      <meta name="og:title" content="GoGoPool Dashboard" />
+      <meta name="og:title" content="ProjectHub Dashboard" />
       <meta name="og:type" content="website" />
-      <meta name="og:url" content="https://GoGoPool.network" />
+      <meta name="og:url" content="https://ProjectHub.network" />
       <meta name="og:image" content="/images/tree-with-text.jpg" />
-      <meta name="og:site_name" content="GoGoPool" />
+      <meta name="og:site_name" content="ProjectHub" />
       <meta
         name="og:description"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
 
-      <meta property="profile:first_name" content="GoGoPool" />
+      <meta property="profile:first_name" content="ProjectHub" />
       <meta property="profile:last_name" content="Team" />
-      <meta property="profile:username" content="GoGoPool" />
+      <meta property="profile:username" content="ProjectHub" />
 
-      <meta name="og:email" content="support@GoGoPool.com" />
+      <meta name="og:email" content="support@ProjectHub.com" />
 
       <meta name="og:latitude" content="27.985667108983073" />
       <meta name="og:longitude" content="-15.522672900302613" />
@@ -121,12 +121,12 @@ export const Description = () => {
       <meta name="og:postal-code" content="35216" />
       <meta name="og:country-name " content="Spain" />
       <meta name="twitter:card" content="summary" />
-      <meta name="twitter:site" content="@GoGoPool" />
-      <meta name="twitter:creator" content="@GoGoPool" />
-      <meta name="twitter:title" content="GoGoPool Dashboard" />
+      <meta name="twitter:site" content="@ProjectHub" />
+      <meta name="twitter:creator" content="@ProjectHub" />
+      <meta name="twitter:title" content="ProjectHub Dashboard" />
       <meta
         name="twitter:description"
-        content="GoGoPool Metrics Dashboard created by dappling.network"
+        content="ProjectHub Metrics Dashboard created by dappling.network"
       />
       <meta name="twitter:image" content="/images/tree-with-text.jpg" />
     </Head>
@@ -138,18 +138,18 @@ const addJsonLd = () => {
     __html: `{
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "GoGoPool",
+      "name": "ProjectHub",
       "image": [
         "="/images/tree-with-text.jpg",
         "/images/wordmark.svg",
         "/images/logo.svg"
        ],
-      "description": "GoGoPool - Liquid staking.",
+      "description": "ProjectHub - Liquid staking.",
       "sku": "DPL001",
       "mpn": "DPL2029",
       "brand": {
         "@type": "Brand",
-        "name": "GoGoPool"
+        "name": "ProjectHub"
       },
       "review": {
         "@type": "Review",
@@ -160,7 +160,7 @@ const addJsonLd = () => {
         },
         "author": {
           "@type": "Person",
-          "name": "GoGoPool Team"
+          "name": "ProjectHub Team"
         }
       },
       "aggregateRating": {
@@ -170,7 +170,7 @@ const addJsonLd = () => {
       },
       "offers": {
         "@type": "Offer",
-        "url": "https://GoGoPool.network",
+        "url": "https://ProjectHub.network",
         "priceCurrency": "USD",
         "price": "49.99",
         "priceValidUntil": "2023-12-31",

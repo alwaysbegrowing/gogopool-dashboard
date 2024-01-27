@@ -58,7 +58,7 @@ const App: React.FC = () => {
           }}
         />
         <Column
-          title="Node OP Avax"
+          title="Node OP PLS"
           dataIndex="8"
           key="2"
           render={(n) => {

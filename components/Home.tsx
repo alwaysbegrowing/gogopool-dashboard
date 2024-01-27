@@ -46,7 +46,7 @@ export default function Home() {
   const { data: rewardsEligibilityMinSeconds } =
     useGetRewardsEligibilityMinSeconds();
   const [minipoolCount, totalStakedAMount] = data ?? [0, BigNumber.from(0)];
-  const [stakersCount, ggpStaked] = stakerData ?? [0, BigNumber.from(0)];
+  const [stakersCount, PPYStaked] = stakerData ?? [0, BigNumber.from(0)];
 
   if (!isMounted) return null;
   const rewardsCycleStartDate = rewardsCycleStartTime
@@ -101,7 +101,7 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title="AVAX Staked"
+                title="PLS Staked"
                 value={toWei(totalStakedAMount as any as BigNumber)}
                 precision={0}
               />
@@ -111,8 +111,8 @@ export default function Home() {
           <Col xs={12} md={12} lg={6}>
             <Card loading={isLoading} bordered={false}>
               <Statistic
-                title="GGP Staked"
-                value={toWei(ggpStaked as any as BigNumber)}
+                title="PPY Staked"
+                value={toWei(PPYStaked as any as BigNumber)}
                 precision={0}
               />
             </Card>
