@@ -10,7 +10,7 @@ import YourMinipoolResults from "./YourMinipoolResults";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { ProtocolSettings } from "./ProtocolSettings";
 import { Staker } from "@/pages/calculator";
-import { INVESTOR_LIST, INVESTOR_REWARD_AMOUNT, RETAIL_REWARD_AMOUNT, calculateTEGS, getRewardAmounts } from "./calculatorUtils";
+import { TOTAL_REWARDS, calculateTEGS, getRewardAmounts } from "./calculatorUtils";
 
 const { Paragraph, Title } = Typography;
 
@@ -30,17 +30,15 @@ type Props = {
   stakers: Staker[];
   currentGgpPriceInAvax: BigNumber;
   avaxPriceInUsd: BigNumber;
+  cycleCount: BigNumber;
 };
 
 export function Calculator({
   stakers,
   currentGgpPriceInAvax,
   avaxPriceInUsd,
+  cycleCount,
 }: Props) {
-  const isInvestorWallet = (staker: any) => {
-    return INVESTOR_LIST.includes(staker.stakerAddr);
-  };
-
   const [avaxAmount, setAvaxAmount] = useState<BigNumber>(parseEther("1000"));
   const [numMinipools, setNumMinipools] = useState<number>(1);
   const [ggpCollatPercent, setGgpCollatPercent] = useState<number>(50);
@@ -55,6 +53,9 @@ export function Calculator({
     currentGgpPriceInAvax.mul(avaxPriceInUsd).div(weiValue)
   );
 
+  console.log(cycleCount.toString())
+  console.log(TOTAL_REWARDS.length)
+
   useEffect(() => {
     if (ggpPriceInAvax.eq(0)) {
       setRealGgpAmount(BigNumber.from(0));
@@ -66,6 +67,9 @@ export function Calculator({
       );
     }
   }, [ggpPriceInAvax, avaxAmount]);
+
+  const totalRewards = TOTAL_REWARDS[Number(cycleCount)].mul(7).div(10)
+  console.log(formatEther(totalRewards))
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {
@@ -138,21 +142,17 @@ export function Calculator({
   }
 
   // Node Operators Total Eligible GGP Staked (TEGS)
-  const { eligibleStakers, retailTegs, investorTegs } = calculateTEGS(checked, stakers, ggpPriceInAvax, realGgpAmount)
+  const { eligibleStakers, totalEligibleGgpStaked } = calculateTEGS(checked, stakers, ggpPriceInAvax, realGgpAmount)
   eligibleStakers.sort((a, b) => toWei(b.effectiveGGPStaked) - toWei(a.effectiveGGPStaked));
 
   // calculations that depend on Total Eligible GGP Staked (TEGS)
   let fullStakers = eligibleStakers.map((staker) => {
-    let rewardAmount = RETAIL_REWARD_AMOUNT;
-    let percentStake = staker.effectiveGGPStaked.mul(weiValue).div(retailTegs);
-    if (isInvestorWallet(staker)) {
-      rewardAmount = INVESTOR_REWARD_AMOUNT
-      percentStake = staker.effectiveGGPStaked.mul(weiValue).div(investorTegs);
-    }
+    let rewardAmount = totalRewards;
+    let percentStake = staker.effectiveGGPStaked.mul(weiValue).div(totalEligibleGgpStaked);
 
     const { ggpReward, avaxReward, usdReward } = getRewardAmounts(
       staker.effectiveGGPStaked,
-      retailTegs,
+      totalEligibleGgpStaked,
       rewardAmount,
       ggpPriceInAvax,
       avaxPriceInUsd
@@ -168,13 +168,6 @@ export function Calculator({
       percentStake,
     };
   });
-
-  const retailStakers = fullStakers.filter(
-    (staker) => !isInvestorWallet(staker)
-  );
-  const investorStakers = fullStakers.filter((staker) =>
-    isInvestorWallet(staker)
-  );
 
   // New Node variable reward amounts
   let rewardAmounts: RewardAmount = {
@@ -195,8 +188,8 @@ export function Calculator({
 
   const { ggpReward, avaxReward, usdReward } = getRewardAmounts(
     rewardAmounts.ggpStake,
-    retailTegs,
-    RETAIL_REWARD_AMOUNT,
+    totalEligibleGgpStaked,
+    totalRewards,
     ggpPriceInAvax,
     avaxPriceInUsd
   );
@@ -206,7 +199,7 @@ export function Calculator({
   rewardAmounts.usdReward = usdReward;
   rewardAmounts.percentStake = rewardAmounts.ggpStake
     .mul(weiValue)
-    .div(retailTegs);
+    .div(totalEligibleGgpStaked);
 
   return (
     <>
@@ -270,20 +263,10 @@ export function Calculator({
           details={
             "This table shows all of the Retail Staker Addresses and their effective GGP staked. It breaks down all rewards on the network in real time and gives information on rewards. Including your minipool does not affect investor rewards."
           }
-          ggpStaked={retailTegs}
-          stakers={retailStakers}
+          ggpStaked={totalEligibleGgpStaked}
+          stakers={fullStakers}
         />
         <Divider />
-        <NodeOpRewardTable
-          handleCheck={handleCheck}
-          checked={checked}
-          title={"Investor Node Ops"}
-          details={
-            "This table shows all of the Investor Staker Addresses and their effective GGP staked. Investor rewards are capped at 10% regardless of number of minipools or GGP staked."
-          }
-          ggpStaked={investorTegs}
-          stakers={investorStakers}
-        />
       </Space>
     </>
   );

@@ -26,8 +26,8 @@ export default function YourMinipoolResults({
   const { Paragraph, Text, Title } = Typography;
 
   // as of 7/13/2023
-  const avaxValidatorBaseApy = parseEther("0.0798");
-  const ggpMinipoolBaseApy = parseEther("0.075");
+  const avaxValidatorBaseApy = parseEther("0.0775");
+  const ggpMinipoolBaseApy = parseEther("0.0775");
 
   const avaxStakedInGGP = avaxAmount.mul(weiValue).div(ggpPriceInAvax)
   const ggpSpent = avaxStakedInGGP.add(realGgpAmount)
