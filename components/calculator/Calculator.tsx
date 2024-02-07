@@ -53,9 +53,6 @@ export function Calculator({
     currentGgpPriceInAvax.mul(avaxPriceInUsd).div(weiValue)
   );
 
-  console.log(cycleCount.toString())
-  console.log(TOTAL_REWARDS.length)
-
   useEffect(() => {
     if (ggpPriceInAvax.eq(0)) {
       setRealGgpAmount(BigNumber.from(0));
@@ -69,7 +66,6 @@ export function Calculator({
   }, [ggpPriceInAvax, avaxAmount]);
 
   const totalRewards = TOTAL_REWARDS[Number(cycleCount)].mul(7).div(10)
-  console.log(formatEther(totalRewards))
 
   function handleMinipoolChange(minipools: number | null) {
     if (minipools) {

@@ -32,12 +32,11 @@ export function Events() {
       )
         .then((res) => res.json())
         .catch(console.error);
-      console.log(response);
       setEvents({
-        messages: response.results,
+        messages: response?.results,
         loading: false,
       });
-      setTotal(response.count);
+      setTotal(response ? response.count : 0);
     }
     getMessages();
   }, [page, limit, owner]);
