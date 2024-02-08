@@ -1,7 +1,7 @@
 import React from "react";
 import CustomLayout from "@/components/Layout/Layout";
 import { Calculator } from "@/components/calculator/Calculator";
-import { useGetGGPPriceInAVAX, useStakers } from "@/hooks/mounted";
+import { useGetGGPPriceInAVAX, useGetRewardsCycleCount, useStakers } from "@/hooks/mounted";
 import { BigNumber } from "ethers";
 import axios from "axios";
 import { parseEther } from "ethers/lib/utils.js";
@@ -23,7 +23,7 @@ export interface Staker {
   inUsd: BigNumber;
   lastRewardsCycleCompleted: BigNumber;
   percentStake: BigNumber;
-  reward: BigNumber;
+  ggpReward: BigNumber;
   rewardsStartTime: BigNumber;
   stakerAddr: `0x${string}`;
   key: string,
@@ -41,14 +41,16 @@ const App = () => {
         .get("https://www.jsonbateman.com/avax_price")
         .then((res) => parseEther(res.data.price.toString()))
   });
+  const { data: cycleCount } = useGetRewardsCycleCount()
 
   return (
     <CustomLayout>
       {(stakersLoading || ggpPriceLoading || avaxPriceLoading) && (<Spin />)}
-      {(!stakers || !currentGgpPriceInAvax || !avaxPriceInUsd)
+      {(!stakers || !currentGgpPriceInAvax || !avaxPriceInUsd || !cycleCount)
         ? null
         : (
           <Calculator
+            cycleCount={cycleCount}
             stakers={stakers as Staker[]}
             currentGgpPriceInAvax={currentGgpPriceInAvax}
             avaxPriceInUsd={avaxPriceInUsd}

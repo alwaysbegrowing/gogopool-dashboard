@@ -109,7 +109,7 @@ export function NodeOpRewardTable({
     ),
     onFilter: (value: any, record: any) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: (visible: any) => {
+    onFilterDropdownChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () =>
@@ -152,8 +152,8 @@ export function NodeOpRewardTable({
     },
     {
       title: "Monthly GGP Reward",
-      dataIndex: "reward",
-      key: "reward",
+      dataIndex: "ggpReward",
+      key: "ggpReward",
       render: (ggpReward: string) => (
         <>{`${commify((+formatEther(ggpReward)).toFixed(2))}`}</>
       ),
