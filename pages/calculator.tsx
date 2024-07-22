@@ -38,8 +38,8 @@ const App = () => {
     queryKey: ["avax_price"],
     queryFn: () =>
       axios
-        .get("https://www.jsonbateman.com/avax_price")
-        .then((res) => parseEther(res.data.price.toString()))
+        .get("https://api.gogopool.com/prices")
+        .then((res) => parseEther(res.data.avaxInUSD.toString()))
   });
   const { data: cycleCount } = useGetRewardsCycleCount()
 
